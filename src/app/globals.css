@@ -1,0 +1,234 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("../styles/home.css");
+
+@layer base {
+  .both-center {
+    @apply items-center justify-center;
+  }
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    --color-gray-500: #595959;
+    --color-gray-700: #999999;
+    --color-gray-900: #d9d9d9;
+    --size-size-large: 144px;
+    --size-size-small: 48px;
+    --color-danger-300: #a22020;
+    --color-danger-500: #bf2626;
+    --color-danger-700: #e14747;
+    --color-gray-black: #000000;
+    --color-gray-white: #ffffff;
+    --size-size-medium: 96px;
+    --size-size-xlarge: 192px;
+    --size-size-xsmall: 16px;
+    --space-space-unit: 16px;
+    --color-primary-100: #003eb3;
+    --color-primary-300: #0074f0;
+    --color-primary-500: #14a9ff;
+    --color-primary-700: #85dcff;
+    --color-success-300: #199033;
+    --color-success-500: #32a94c;
+    --color-success-700: #4cc366;
+    --size-size-xxlarge: 288px;
+    --size-size-maxwidth: 1400px;
+    --radius-radius-round: 50%;
+    --color-custom-accent1: #191b5b;
+    --space-space-halfunit: 8px;
+    --space-space-sixunits: 96px;
+    --space-space-twounits: 32px;
+    --color-custom-primary1: #c9b8f9;
+    --color-custom-primary2: #a193c7;
+    --radius-radius-radius2: 2px;
+    --radius-radius-radius4: 4px;
+    --radius-radius-radius8: 8px;
+    --space-space-fiveunits: 80px;
+    --space-space-fourunits: 64px;
+    --space-space-threeunits: 48px;
+    --color-custom-secondary1: #f1ddd9;
+    --color-custom-neutral-dark: #07081d;
+    --color-custom-neutral-light: #ffffff;
+    --space-space-oneandhalfunits: 24px;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  .buttonFilled {
+    @apply text-[var(--color-custom-neutral-dark)] transition-all duration-300 font-bold py-[var(--space-space-halfunit)] px-[var(--space-space-oneandhalfunits)] rounded-[8px] bg-[var(--color-custom-primary1)];
+  }
+  .buttonFilled:hover {
+    @apply bg-[var(--color-custom-primary2)];
+  }
+  .buttonFilledSecondary {
+    @apply text-[var(--color-custom-neutral-light)] transition-all duration-300 font-bold py-[var(--space-space-halfunit)] px-[var(--space-space-oneandhalfunits)] rounded-[8px] bg-[var(--color-custom-neutral-dark)];
+  }
+  .buttonFilledSecondary:hover {
+    @apply text-[var(--color-custom-neutral-dark)] bg-[var(--color-custom-primary2)];
+  }
+  .buttonOutline {
+    @apply text-[var(--color-custom-neutral-dark)] border-[1px] border-border transition-all duration-300 font-bold py-[var(--space-space-halfunit)] px-[var(--space-space-oneandhalfunits)] rounded-[8px];
+  }
+  .buttonOutline:hover {
+    @apply text-[var(--color-custom-accent1)] border-[var(--color-custom-accent1)];
+  }
+  .buttonFlat {
+    @apply text-[var(--color-custom-neutral-light)] font-bold py-[var(--space-space-halfunit)] px-[var(--space-space-oneandhalfunits)];
+  }
+  .buttonFlat:hover {
+    @apply text-[var(--color-custom-primary1)];
+  }
+  .featuresContainer {
+    @apply w-full flex-[0_0_auto] flex-col both-center bg-[var(--color-custom-neutral-dark)] text-[var(--color-custom-neutral-light)];
+  }
+  .featuresCard {
+    @apply w-full flex items-start p-[var(--space-space-oneandhalfunits)] bg-[#202134];
+  }
+  .featuresIcon {
+    @apply fill-[var(--color-custom-neutral-light)] w-[2rem] h-[2rem] flex-shrink-0 mr-[var(--space-space-oneandhalfunits)];
+  }
+  .freePricingCard {
+    @apply gap-[var(--space-space-twounits)] text-[var(--color-custom-neutral-dark)] w-full flex p-[var(--space-space-twounits)] max-w-[450px] min-h-[450px] items-start flex-col bg-[var(--color-custom-secondary1)];
+  }
+  .basicPricingCard {
+    @apply gap-[var(--space-space-twounits)] text-[var(--color-custom-neutral-dark)] w-full flex p-[var(--space-space-twounits)] max-w-[450px] min-h-[450px] items-start flex-col bg-[var(--color-custom-secondary1)];
+  }
+  .proPricingCard {
+    @apply gap-[var(--space-space-twounits)] text-[var(--color-custom-neutral-dark)] w-full flex p-[var(--space-space-twounits)] max-w-[450px] min-h-[450px] items-start flex-col bg-[var(--color-custom-secondary1)];
+  }
+  .faqContainer {
+    @apply flex-[0_0_auto] bg-[var(--color-custom-accent1)] text-[var(--color-custom-neutral-light)] w-full flex both-center;
+  }
+  .navbarContainer {
+    @apply flex bg-[var(--color-custom-neutral-dark)] text-[var(--color-custom-neutral-light)] w-full sticky top-0 items-center px-[var(--space-space-threeunits)] py-[var(--space-space-oneandhalfunits)] justify-between;
+  }
+  .mobileMenu {
+    @apply bg-[var(--color-custom-neutral-dark)] text-[var(--color-custom-neutral-light)];
+  }
+  .heroContainer {
+    @apply flex bg-[var(--color-custom-neutral-dark)] text-[var(--color-custom-neutral-light)] w-full both-center px-[var(--space-space-threeunits)] py-[var(--space-space-sixunits)]  flex-col;
+  }
+  .pricingContainer {
+    @apply gap-[var(--space-space-twounits)] text-[var(--color-custom-neutral-light)] w-full flex both-center px-[var(--space-space-threeunits)] py-[var(--space-space-fourunits)] flex-col  bg-[var(--color-custom-neutral-dark)];
+  }
+  .bannerContainer {
+    @apply gap-[var(--space-space-twounits)] text-[var(--color-custom-neutral-light)] w-full flex items-center px-[var(--space-space-fiveunits)] py-[var(--space-space-sixunits)] flex-col justify-between bg-[var(--color-custom-neutral-dark)];
+  }
+  .footerContainer {
+    @apply gap-[var(--space-space-twounits)] text-[var(--color-custom-neutral-light)] w-full flex items-center px-[var(--space-space-threeunits)] py-[var(--space-space-twounits)] flex-col justify-between bg-[var(--color-custom-neutral-dark)];
+  }
+  .socialIcons {
+    @apply fill-[var(--color-custom-neutral-light)];
+  }
+  .button {
+    @apply text-[var(--color-gray-black)] inline-block py-[0.5rem] px-[1rem] border-[1px] border-border rounded-[4px] bg-[var(--color-gray-white)];
+  }
+  .input {
+    @apply text-[var(--color-gray-black)] cursor-auto py-[0.5rem] px-[1rem] border-[1px] border-border rounded-[4px] bg-[var(--color-gray-white)];
+  }
+  .textarea {
+    @apply text-[var(--color-gray-black)] cursor-auto p-[0.5rem] border-[1px] border-border rounded-[4px] bg-[var(--color-gray-white)];
+  }
+  .list {
+    @apply w-full m-[1em 0px 1em 0px] block p-[0px 0px 0px 1.5rem] list-none list-outside;
+  }
+  .list-item {
+    @apply list-item;
+  }
+  .teleport-show {
+    @apply flex transform-none !important;
+  }
+  .logo {
+    @apply text-[2rem] font-bold uppercase leading-[150%];
+  }
+  .overtext {
+    @apply text-[12px] font-bold uppercase leading-[150%];
+  }
+  .heading3 {
+    @apply text-[20px] text-center font-semibold leading-[150%];
+  }
+  .bodySmall {
+    @apply text-[16px] font-normal leading-[150%];
+  }
+  .Heading {
+    @apply text-[32px] font-bold leading-[115%];
+  }
+  .heading2 {
+    @apply text-[35px] font-semibold leading-[150%];
+  }
+  .Content {
+    @apply text-[16px] font-normal leading-[115%];
+  }
+  .heading1 {
+    @apply text-[48px] text-center font-bold leading-[150%];
+  }
+  .bodyLarge {
+    @apply text-[18px] font-normal leading-[150%];
+  }
+}
