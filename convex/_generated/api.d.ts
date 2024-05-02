@@ -17,6 +17,7 @@ import type {
 import type * as chat from "../chat.js";
 import type * as chats from "../chats.js";
 import type * as follower from "../follower.js";
+import type * as followers from "../followers.js";
 import type * as message from "../message.js";
 import type * as messages from "../messages.js";
 import type * as request from "../request.js";
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   chat: typeof chat;
   chats: typeof chats;
   follower: typeof follower;
+  followers: typeof followers;
   message: typeof message;
   messages: typeof messages;
   request: typeof request;

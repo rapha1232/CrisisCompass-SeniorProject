@@ -1,13 +1,30 @@
-"use client";
-import Error from "next/error";
-import { useRouter } from "next/router";
+"use client"; // Error components must be Client Components
+
 import { useEffect } from "react";
 
-export default function ErrorPage({ error }: { error: Error }) {
-  const router = useRouter();
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
   useEffect(() => {
-    if (error) {
-      router.push("/chats");
-    }
-  }, [error, router]);
+    // Log the error to an error reporting service
+    console.error(error);
+  }, [error]);
+
+  return (
+    <div>
+      <h2>Something went wrong!</h2>
+      <button
+        onClick={
+          // Attempt to recover by trying to re-render the segment
+          () => reset()
+        }
+      >
+        Try again
+      </button>
+    </div>
+  );
 }

@@ -1,4 +1,3 @@
-import FollowUserDialog from "@/components/followers/FollowUserDialog";
 import { SignedIn, UserButton, auth } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import Image from "next/image";
@@ -17,12 +16,11 @@ const NavBar = () => {
           height={23}
           alt="Crisis Compass"
         ></Image>
-        <p className="h2-bold font-spaceGrotesk text-dark-100 dark:text-light-900 max-sm:hidden">
+        <p className="h2-bold font-spaceGrotesk text-dark100_light900 max-sm:hidden">
           Crisis <span className="text-primary-500">Compass</span>
         </p>
       </Link>
       <div className="flex-between gap-5">
-        <FollowUserDialog />
         <Theme />
         <SignedIn>
           <UserButton

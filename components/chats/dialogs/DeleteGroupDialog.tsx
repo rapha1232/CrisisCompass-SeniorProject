@@ -21,31 +21,31 @@ type Props = {
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const RemoveFollowerDialog = ({ chatId, open, setOpen }: Props) => {
-  const { mutate: removeFollower, pending } = useMutationState(
-    api.follower.remove
+const DeleteGroupDialog = ({ chatId, open, setOpen }: Props) => {
+  const { mutate: deleteGroup, pending } = useMutationState(
+    api.chat.deleteGroup
   );
 
-  const handleRemoveFollower = async () => {
-    removeFollower({ chatId })
+  const handleDeleteGroup = async () => {
+    deleteGroup({ chatId })
       .then(() => {
-        toast.success("Follower removed");
+        toast.success("Group deleted");
       })
       .catch((err) => {
         toast.error(
-          err instanceof ConvexError ? err.data : "Failed to remove follower"
+          err instanceof ConvexError ? err.data : "Failed to delete group"
         );
       });
   };
   return (
     <AlertDialog open={open} setOpen={setOpen}>
-      <AlertDialogContent className="bg-dark-300 border-none text-dark100_light900">
+      <AlertDialogContent className="background-light700_dark300 border-none text-dark100_light900">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. All messages will be deleted and you
-            will not be able to message this user again or recover the messages.
-            All group chats will still work as normal.
+            will not be able to message this group again or recover the
+            messages. Individual chats will still work as normal.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -58,7 +58,7 @@ const RemoveFollowerDialog = ({ chatId, open, setOpen }: Props) => {
           </AlertDialogCancel>
           <AlertDialogAction
             disabled={pending}
-            onClick={handleRemoveFollower}
+            onClick={handleDeleteGroup}
             className="bg-red-600"
           >
             Delete
@@ -69,4 +69,4 @@ const RemoveFollowerDialog = ({ chatId, open, setOpen }: Props) => {
   );
 };
 
-export default RemoveFollowerDialog;
+export default DeleteGroupDialog;

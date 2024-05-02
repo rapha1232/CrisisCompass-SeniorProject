@@ -9,6 +9,7 @@ type Props = {
   content: string[];
   createdAt: number;
   type: string;
+  seen?: React.ReactNode;
 };
 
 const Message = ({
@@ -19,6 +20,7 @@ const Message = ({
   content,
   createdAt,
   type,
+  seen,
 }: Props) => {
   const formatTime = (timestamp: number) => {
     return format(new Date(timestamp), "HH:mm");
@@ -44,12 +46,12 @@ const Message = ({
           })}
         >
           {type === "text" ? (
-            <p className="text-wrap break-words whitespace-pre-wrap text-white">
+            <p className="text-wrap break-words whitespace-pre-wrap text-dark100_light900 break-all">
               {content}
             </p>
           ) : null}
           <p
-            className={cn("text-xs flex w-full my-1 text-black", {
+            className={cn("text-xs flex w-full my-1 text-dark100_light900", {
               "justify-end": fromCurrentUser,
               "justify-start": !fromCurrentUser,
             })}
@@ -57,6 +59,7 @@ const Message = ({
             {formatTime(createdAt)}
           </p>
         </div>
+        {seen}
       </div>
       <Avatar
         className={cn("relative size-8", {

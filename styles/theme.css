@@ -42,6 +42,9 @@
   .text-dark100_light900 {
     @apply text-dark-100 dark:text-light-900 !important;
   }
+  .text-dark900_light100 {
+    @apply text-light-900 dark:text-dark-100 !important;
+  }
 
   .text-dark200_light900 {
     @apply text-dark-200 dark:text-light-900;

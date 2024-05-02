@@ -97,14 +97,14 @@ const MobileNav = () => {
               <SheetClose asChild>
                 <Link href="/sign-in">
                   <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
-                    <span className="primary-text-gradient">Log In</span>
+                    <span className="text-primary-500">Log In</span>
                   </Button>
                 </Link>
               </SheetClose>
               <SheetClose asChild>
                 <Link href="/sign-up">
                   <Button className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
-                    <span className="primary-text-gradient">Sign Up</span>
+                    <span className="text-primary-500">Sign Up</span>
                   </Button>
                 </Link>
               </SheetClose>
@@ -114,7 +114,7 @@ const MobileNav = () => {
             <SheetClose asChild>
               <SignOutButton>
                 <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none gap-3">
-                  <span className="text-white">Logout</span>
+                  <span className="text-primary-500">Logout</span>
                   <HiOutlineLogout size={16} color="red" />
                 </Button>
               </SignOutButton>

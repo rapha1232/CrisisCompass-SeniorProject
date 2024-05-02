@@ -9,7 +9,7 @@ export default function RoomLayout({ children }: RoomLayoutProps) {
     <div className="h-full">
       <main className="flex h-full pt-[5.5rem] w-full">
         <Sidebar />
-        <div className="size-full">{children}</div>
+        <div className="size-full max-lg:hidden">{children}</div>
       </main>
     </div>
   );

@@ -5,15 +5,15 @@ import { Loading } from "@/components/Global/loading";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 
-const Room = () => {
+const Page = () => {
   const requests = useQuery(api.requests.get);
 
   return (
-    <main className="h-[calc(100vh-96px)] bg-dark-300 ">
+    <main className="h-[calc(100vh-96px)] background-light700_dark300 ">
       <h1 className="text-4xl font-bold w-full text-center py-12 text-gray-100">
         Incoming Follow Requests
       </h1>
-      <div className="">
+      <div>
         {requests === null && <Loading />}
         {requests?.length === 0 && (
           <h3 className="text-xl font-bold w-full text-center py-12 text-gray-100">
@@ -33,4 +33,4 @@ const Room = () => {
   );
 };
 
-export default Room;
+export default Page;

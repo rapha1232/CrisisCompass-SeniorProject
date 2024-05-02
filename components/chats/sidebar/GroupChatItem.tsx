@@ -1,13 +1,12 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Id } from "@/convex/_generated/dataModel";
-import { User } from "lucide-react";
 import Link from "next/link";
+import { MdGroups2 } from "react-icons/md";
 
 type Props = {
   id: Id<"chats">;
-  imageUrl: string;
   name: string;
   additionalClasses?: string;
   lastMessageSender?: string;
@@ -15,9 +14,8 @@ type Props = {
   unseenMessagesCount: number;
 };
 
-const DMChatItem = ({
+const GroupChatItem = ({
   id,
-  imageUrl,
   name,
   additionalClasses,
   lastMessageContent,
@@ -32,9 +30,8 @@ const DMChatItem = ({
       <Card className="p-2 flex flex-row items-center justify-between gap-4 truncate border-none text-dark100_light900">
         <div className="flex flex-row items-center gap-4 truncate">
           <Avatar className="size-12">
-            <AvatarImage src={imageUrl} />
             <AvatarFallback>
-              <User />
+              <MdGroups2 size={32} />
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col truncate">
@@ -68,4 +65,4 @@ const DMChatItem = ({
   );
 };
 
-export default DMChatItem;
+export default GroupChatItem;

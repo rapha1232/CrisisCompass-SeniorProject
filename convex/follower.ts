@@ -58,6 +58,59 @@ export const create = mutation({
 });
 
 export const remove = mutation({
-  args: {},
-  handler: async (ctx, args) => {},
+  args: {
+    chatId: v.id("chats"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("Called (GET_CHAT) without authenticated user");
+    }
+    const currentUser = await getCurrentUser(ctx, args);
+    if (!currentUser) {
+      throw new ConvexError("User not found");
+    }
+
+    const chat = await ctx.db.get(args.chatId);
+    if (!chat) {
+      throw new ConvexError("Chat not found");
+    }
+
+    const memberships = await ctx.db
+      .query("chatMembers")
+      .withIndex("by_chatId", (q) => q.eq("chatId", args.chatId))
+      .collect();
+
+    if (!memberships || memberships.length !== 2) {
+      throw new ConvexError("This chat doesnt have any members");
+    }
+    const follower = await ctx.db
+      .query("follows")
+      .withIndex("by_chatId", (q) => q.eq("chatId", args.chatId))
+      .unique();
+
+    if (!follower) {
+      throw new ConvexError("No follower found");
+    }
+
+    const messages = await ctx.db
+      .query("messages")
+      .withIndex("by_chatId", (q) => q.eq("chatId", args.chatId))
+      .collect();
+
+    await ctx.db.delete(args.chatId);
+    await ctx.db.delete(follower._id);
+
+    await Promise.all(
+      memberships.map(async (membership) => {
+        await ctx.db.delete(membership._id);
+      })
+    );
+
+    await Promise.all(
+      messages.map(async (message) => {
+        await ctx.db.delete(message._id);
+      })
+    );
+  },
 });

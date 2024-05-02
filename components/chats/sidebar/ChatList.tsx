@@ -4,6 +4,7 @@ import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { usePathname } from "next/navigation";
 import DMChatItem from "./DMChatItem";
+import GroupChatItem from "./GroupChatItem";
 
 export const ChatList = () => {
   const pathname = usePathname();
@@ -11,26 +12,36 @@ export const ChatList = () => {
   return (
     <div>
       {chats?.map((chat) => {
-        if (chat.chat.isGroup) {
-          return null;
-        } else {
-          return (
-            <div key={chat.chat._id} className="flex flex-row text-white">
-              <DMChatItem
-                id={chat.chat._id}
-                imageUrl={chat.otherMember?.imageURL || ""}
-                name={chat.otherMember?.fullname || ""}
-                additionalClasses={
-                  pathname.includes(chat.chat._id)
-                    ? "bg-accent-purple hover:bg-transparent"
-                    : ""
-                }
-                lastMessageContent={chat.lastMessageDetails?.content}
-                lastMessageSender={chat.lastMessageDetails?.sender}
-              />
-            </div>
-          );
-        }
+        return chat.chat.isGroup ? (
+          <GroupChatItem
+            key={chat.chat._id}
+            id={chat.chat._id}
+            name={chat.chat.name || ""}
+            additionalClasses={
+              pathname.includes(chat.chat._id)
+                ? "bg-accent-purple hover:bg-transparent"
+                : ""
+            }
+            lastMessageContent={chat.lastMessageDetails?.content}
+            lastMessageSender={chat.lastMessageDetails?.sender}
+            unseenMessagesCount={chat.unSeenCount}
+          />
+        ) : (
+          <DMChatItem
+            key={chat.chat._id}
+            id={chat.chat._id}
+            imageUrl={chat.otherMember?.imageURL || ""}
+            name={chat.otherMember?.fullname || ""}
+            additionalClasses={
+              pathname.includes(chat.chat._id)
+                ? "bg-accent-purple hover:bg-transparent"
+                : ""
+            }
+            lastMessageContent={chat.lastMessageDetails?.content}
+            lastMessageSender={chat.lastMessageDetails?.sender}
+            unseenMessagesCount={chat.unSeenCount}
+          />
+        );
       })}
     </div>
   );

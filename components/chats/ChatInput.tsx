@@ -86,7 +86,7 @@ const ChatInput = () => {
                           onChange={handleInputChange}
                           onClick={handleInputChange}
                           placeholder="Your Message..."
-                          className="bg-[#FAFAFA] dark:bg-dark-300 min-size-full flex-1 resize-none border-0 outline-0 bg-card text-dark100_light900 placeholder:text-muted-foreground p-1.5 rounded-md"
+                          className="background-light700_dark300 min-size-full flex-1 resize-none border-0 outline-0 bg-card text-dark100_light900 placeholder:text-muted-foreground p-1.5 rounded-md"
                         />
                         <Button className="p-0 m-0" size={"icon"}>
                           <LucideSend

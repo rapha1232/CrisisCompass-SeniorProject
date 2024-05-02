@@ -2,11 +2,13 @@
 import { api } from "@/convex/_generated/api";
 import { useMutationState } from "@/hooks/useMutationState";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "convex/react";
 import { ConvexError } from "convex/values";
 import { UserPlus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Loading } from "../Global/loading";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -27,6 +29,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { FollowRequest } from "./FollowRequest";
 
 const FollowUserSchema = z.object({
   email: z
@@ -58,21 +61,22 @@ const FollowUserDialog = () => {
         );
       });
   };
+  const requests = useQuery(api.requests.get);
   return (
     <Dialog>
       <Tooltip>
         <TooltipTrigger>
-          <Button size={"icon"} variant={"ghost"}>
+          <Button size={"icon"}>
             <DialogTrigger>
-              <UserPlus className="text-black dark:text-white" />
+              <UserPlus className="text-dark100_light900" />
             </DialogTrigger>
           </Button>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent className="background-light700_dark300 outline-none border-none">
           <p className="text-dark100_light900">Add friend</p>
         </TooltipContent>
       </Tooltip>
-      <DialogContent className="text-light-900">
+      <DialogContent className="text-dark100_light900 background-light700_dark300 outline-none border-none">
         <DialogHeader>
           <DialogTitle>Add Friend</DialogTitle>
           <DialogDescription>
@@ -114,6 +118,28 @@ const FollowUserDialog = () => {
             </DialogFooter>
           </form>
         </Form>
+        <div className="w-full border" />
+        <div className="background-light700_dark300 ">
+          <h5 className="text-xl font-bold w-full text-center text-gray-100">
+            Incoming Follow Requests
+          </h5>
+          <div>
+            {requests === null && <Loading />}
+            {requests?.length === 0 && (
+              <h6 className="text-xs font-bold w-full text-center py-4 text-gray-100">
+                No Requests Found
+              </h6>
+            )}
+            {requests?.length !== 0 &&
+              requests?.map((request) => (
+                <FollowRequest
+                  key={request.request._id}
+                  otherUser={request.sender}
+                  id={request.request._id}
+                />
+              ))}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

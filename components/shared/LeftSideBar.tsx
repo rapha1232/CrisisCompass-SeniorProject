@@ -33,7 +33,7 @@ const LeftSideBar = () => {
               {newFollowRequests !== 0 &&
                 newFollowRequests !== null &&
                 link.label === "Chats" && (
-                  <Badge className="bg-primary-500 text-light-900  absolute top-0 right-0">
+                  <Badge className="bg-primary-500 text-light-900 absolute top-0 right-0">
                     {newFollowRequests}
                   </Badge>
                 )}

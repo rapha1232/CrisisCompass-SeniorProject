@@ -5,7 +5,9 @@ import Body from "@/components/chats/Body";
 import ChatContainer from "@/components/chats/ChatContainer";
 import ChatInput from "@/components/chats/ChatInput";
 import Header from "@/components/chats/Header";
-import RemoveFollowerDialog from "@/components/chats/dialogs/RemoveFriendDialog";
+import DeleteGroupDialog from "@/components/chats/dialogs/DeleteGroupDialog";
+import LeaveGroupDialog from "@/components/chats/dialogs/LeaveGroupDialog";
+import RemoveFollowerDialog from "@/components/chats/dialogs/RemoveFollowerDialog";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
@@ -24,6 +26,7 @@ const ChatPage = ({ params: { chatId } }: ChatProps) => {
     useState(false);
   const [deleteGroupDialogOpen, setDeleteGroupDialogOpen] = useState(false);
   const [leaveGroupDialogOpen, setLeaveGroupDialogOpen] = useState(false);
+  const [addToGroupDialogOpen, setAddToGroupDialogOpen] = useState(false);
   const [callType, setCallType] = useState<"audio" | "video" | null>(null);
   return chat === undefined ? (
     <Loading />
@@ -36,12 +39,29 @@ const ChatPage = ({ params: { chatId } }: ChatProps) => {
         setOpen={setRemoveFollowerDialogOpen}
         chatId={chatId}
       />
+      <DeleteGroupDialog
+        open={deleteGroupDialogOpen}
+        setOpen={setDeleteGroupDialogOpen}
+        chatId={chatId}
+      />
+      <LeaveGroupDialog
+        open={leaveGroupDialogOpen}
+        setOpen={setLeaveGroupDialogOpen}
+        chatId={chatId}
+      />
       <Header
-        name={(chat.isGroup ? chat.name : chat.otherMember.fullname) || ""}
-        imageUrl={chat.otherMember.imageURL || ""}
+        name={(chat.isGroup ? chat.name : chat.otherMember?.fullname) || ""}
+        imageUrl={chat.otherMember?.imageURL || ""}
         options={
           chat.isGroup
             ? [
+                {
+                  label: "Add to Group",
+                  destructive: false,
+                  onClick() {
+                    setAddToGroupDialogOpen(true);
+                  },
+                },
                 {
                   label: "Leave Group",
                   destructive: false,
@@ -68,7 +88,17 @@ const ChatPage = ({ params: { chatId } }: ChatProps) => {
               ]
         }
       />
-      <Body />
+      <Body
+        members={
+          chat.isGroup
+            ? chat.otherMembers
+              ? chat.otherMembers
+              : []
+            : chat.otherMember
+              ? [chat.otherMember]
+              : []
+        }
+      />
       <ChatInput />
     </ChatContainer>
   );

@@ -40,15 +40,40 @@ export const get = query({
           ctx,
           id: chat.lastMessageId,
         });
+
+        const lastSeenMessage = chatMemberships[i].lastSeenMessage
+          ? await ctx.db.get(chatMemberships[i].lastSeenMessage!)
+          : null;
+
+        const lastSeenMessageTime = lastSeenMessage
+          ? lastSeenMessage._creationTime
+          : -1;
+
+        const unseenMessages = await ctx.db
+          .query("messages")
+          .withIndex("by_chatId", (q) => q.eq("chatId", chat._id))
+          .filter((m) => m.gt(m.field("_creationTime"), lastSeenMessageTime))
+          .filter((m) => m.neq(m.field("senderId"), currentUser._id))
+          .collect();
+
         if (chat.isGroup) {
-          return { chat, lastMessageDetails };
+          return {
+            chat,
+            lastMessageDetails,
+            unSeenCount: unseenMessages.length,
+          };
         } else {
           const otherMembership = members.filter(
             (member) => member.memberId !== currentUser._id
           )[0];
 
           const otherMember = await ctx.db.get(otherMembership.memberId);
-          return { chat, otherMember, lastMessageDetails };
+          return {
+            chat,
+            otherMember,
+            lastMessageDetails,
+            unSeenCount: unseenMessages.length,
+          };
         }
       })
     );
