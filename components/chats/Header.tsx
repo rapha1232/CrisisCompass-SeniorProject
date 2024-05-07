@@ -25,9 +25,9 @@ type Props = {
 
 const Header = ({ imageUrl, name, options }: Props) => {
   return (
-    <Card className="w-full flex rounded-lg items-center justify-between p-2 outline-none border-none text-dark100_light900">
+    <Card className="text-dark100_light900 flex w-full items-center justify-between rounded-lg border-none p-2 outline-none">
       <div className="flex items-center gap-2">
-        <Link href="/chats" className="lg:hidden block">
+        <Link href="/chats" className="lg:hidden">
           <CircleArrowLeft />
         </Link>
         <Avatar className="size-8">
@@ -36,14 +36,14 @@ const Header = ({ imageUrl, name, options }: Props) => {
             <MdGroups2 size={24} />
           </AvatarFallback>
         </Avatar>
-        <h2 className="semi-bold">{name}</h2>
+        <h2 className="font-semibold">{name}</h2>
       </div>
       <div className="flex gap-2">
         {options ? (
           <DropdownMenu>
-            <DropdownMenuTrigger className="active:outline-none focus:outline-none">
+            <DropdownMenuTrigger className="focus:outline-none active:outline-none">
               <Button size="icon" variant={"secondary"}>
-                <Settings color="white" />
+                <Settings className="text-dark100_light900" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="background-light700_dark300">

@@ -1,3 +1,5 @@
+import { features } from "@/constants";
+import Image from "next/image";
 import FeatureCard from "./FeatureCard";
 
 export default function Features() {
@@ -15,22 +17,22 @@ export default function Features() {
             </h2>
           </div>
           <div className="home-container3">
-            <FeatureCard
-              heading="User Profile"
-              subHeading="Create and manage your personal profile for quick access to emergency services"
-            ></FeatureCard>
-            <FeatureCard
-              heading="Chat Logs"
-              subHeading="View and track all your communication history during emergencies for better coordination"
-            ></FeatureCard>
-            <FeatureCard
-              heading="Interactive Maps"
-              subHeading="Locate emergency situations and relief stations on a user-friendly map interface"
-            ></FeatureCard>
-            <FeatureCard
-              heading="Broadcasts &amp; Alerts"
-              subHeading="Stay informed with real-time updates and alerts about ongoing emergencies in your area"
-            ></FeatureCard>
+            {features.map((feature, index) => (
+              <FeatureCard
+                key={index}
+                icon={
+                  <Image
+                    src={feature.icon}
+                    alt={feature.heading}
+                    width={20}
+                    height={20}
+                    className="mr-6 size-8 shrink fill-white"
+                  />
+                }
+                heading={feature.heading}
+                subHeading={feature.subHeading}
+              ></FeatureCard>
+            ))}
           </div>
         </div>
       </div>

@@ -1,36 +1,24 @@
 "use client";
 
-import { FollowRequest } from "@/components/followers/FollowRequest";
-import { Loading } from "@/components/Global/loading";
-import { api } from "@/convex/_generated/api";
-import { useQuery } from "convex/react";
+import { ChatList } from "@/components/chats/sidebar/ChatList";
+import { Search } from "@/components/chats/sidebar/Search";
+import CreateGroupDialog from "@/components/dialogs/CreateGroupDialog";
+import FollowUserDialog from "@/components/followers/FollowUserDialog";
 
-const Page = () => {
-  const requests = useQuery(api.requests.get);
-
+const RoomsPage = () => {
   return (
-    <main className="h-[calc(100vh-96px)] background-light700_dark300 ">
-      <h1 className="text-4xl font-bold w-full text-center py-12 text-gray-100">
-        Incoming Follow Requests
-      </h1>
-      <div>
-        {requests === null && <Loading />}
-        {requests?.length === 0 && (
-          <h3 className="text-xl font-bold w-full text-center py-12 text-gray-100">
-            No Requests Found
-          </h3>
-        )}
-        {requests?.length !== 0 &&
-          requests?.map((request) => (
-            <FollowRequest
-              key={request.request._id}
-              otherUser={request.sender}
-              id={request.request._id}
-            />
-          ))}
-      </div>
-    </main>
+    <div className="background-light700_dark300 relative h-full flex-1 border-r border-accent-purple">
+      <span className="flex w-full flex-row items-center justify-between">
+        <div className="m-2 flex flex-row items-center p-0">
+          <span className="text-dark100_light900">Create a Group</span>
+          <CreateGroupDialog />
+        </div>
+        <FollowUserDialog />
+      </span>
+      <Search />
+      <ChatList />
+    </div>
   );
 };
 
-export default Page;
+export default RoomsPage;

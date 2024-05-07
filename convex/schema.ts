@@ -7,11 +7,27 @@ export default defineSchema({
     email: v.string(),
     fullname: v.string(),
     phoneNumber: v.optional(v.string()),
-    location: v.optional(v.string()),
+    location: v.optional(v.array(v.number())),
     imageURL: v.optional(v.string()),
+    approveNotification: v.optional(v.boolean()),
   })
     .index("by_token", ["tokenIdentifier"])
-    .index("by_email", ["email"]),
+    .index("by_email", ["email"])
+    .index("by_notification", ["approveNotification"]),
+
+  skills: defineTable({
+    userId: v.id("users"),
+    skill: v.union(
+      v.literal("Medical"),
+      v.literal("Food and Water"),
+      v.literal("Shelter"),
+      v.literal("Transportation"),
+      v.literal("Clothing"),
+      v.literal("Other")
+    ),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_skill", ["skill"]),
 
   chats: defineTable({
     name: v.optional(v.string()),
@@ -50,4 +66,14 @@ export default defineSchema({
     .index("by_user1", ["user1"])
     .index("by_user2", ["user2"])
     .index("by_chatId", ["chatId"]),
+
+  broadcast: defineTable({
+    senderId: v.id("users"),
+    title: v.string(),
+    description: v.string(),
+    location: v.array(v.number()),
+    status: v.union(v.literal("Active"), v.literal("Resolved")),
+  })
+    .index("by_sender", ["senderId"])
+    .index("by_status", ["status"]),
 });

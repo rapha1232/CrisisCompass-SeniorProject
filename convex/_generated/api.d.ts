@@ -14,6 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as broadcasts from "../broadcasts.js";
 import type * as chat from "../chat.js";
 import type * as chats from "../chats.js";
 import type * as follower from "../follower.js";
@@ -22,6 +23,7 @@ import type * as message from "../message.js";
 import type * as messages from "../messages.js";
 import type * as request from "../request.js";
 import type * as requests from "../requests.js";
+import type * as skills from "../skills.js";
 import type * as users from "../users.js";
 import type * as _utils from "../_utils.js";
 
@@ -34,6 +36,7 @@ import type * as _utils from "../_utils.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  broadcasts: typeof broadcasts;
   chat: typeof chat;
   chats: typeof chats;
   follower: typeof follower;
@@ -42,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   messages: typeof messages;
   request: typeof request;
   requests: typeof requests;
+  skills: typeof skills;
   users: typeof users;
   _utils: typeof _utils;
 }>;

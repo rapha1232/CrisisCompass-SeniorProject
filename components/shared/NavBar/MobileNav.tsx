@@ -34,12 +34,12 @@ const NavContent = () => {
                   ? "primary-gradient rounded-lg text-light-900"
                   : "text-dark300_light900"
               }
-            flex items-center justify-start gap-4 bg-transparent p-4 relative`}
+            relative flex items-center justify-start gap-4 bg-transparent p-4`}
             >
               {newFollowRequests !== 0 &&
                 newFollowRequests !== null &&
                 link.label === "Chats" && (
-                  <Badge className="bg-primary-500 text-light-900  absolute top-0 right-0">
+                  <Badge className="absolute right-0  top-0 bg-primary-500 text-light-900">
                     {newFollowRequests}
                   </Badge>
                 )}
@@ -88,7 +88,7 @@ const MobileNav = () => {
             Crisis <span className="text-primary-500">Compass</span>
           </p>
         </Link>
-        <div className="h-[80%]">
+        <div className="h-4/5">
           <SheetClose asChild>
             <NavContent />
           </SheetClose>
@@ -113,7 +113,7 @@ const MobileNav = () => {
           <SignedIn>
             <SheetClose asChild>
               <SignOutButton>
-                <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none gap-3">
+                <Button className="small-medium btn-secondary min-h-[41px] w-full gap-3 rounded-lg px-4 py-3 shadow-none">
                   <span className="text-primary-500">Logout</span>
                   <HiOutlineLogout size={16} color="red" />
                 </Button>

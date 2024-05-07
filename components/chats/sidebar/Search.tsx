@@ -9,7 +9,7 @@ export const Search = () => {
     <div className="border-b border-solid border-gray-600">
       <div className="p-[10px]">
         <Input
-          className="bg-transparent border-none text-white outline-none shadow-none no-focus placeholder:text-gray-300"
+          className="no-focus border-none bg-transparent text-white shadow-none outline-none placeholder:text-gray-300"
           type="text"
           placeholder="Find a follower..."
           onKeyDown={(e) => {

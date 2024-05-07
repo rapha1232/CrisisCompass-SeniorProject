@@ -2,6 +2,7 @@
 
 import { Loading } from "@/components/Global/loading";
 import { ClerkProvider, useAuth } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import {
   AuthLoading,
   Authenticated,
@@ -9,6 +10,7 @@ import {
   Unauthenticated,
 } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
+import React from "react";
 
 interface ConvexClientProviderProps {
   children: React.ReactNode;
@@ -26,8 +28,9 @@ export const ConvexClientProvider = ({
       appearance={{
         elements: {
           formButtonPrimary: "primary-gradient",
-          footerActionLink: "primary-text-gradient hover:text-primary-500",
+          footerActionLink: "hover:text-primary-500",
         },
+        baseTheme: dark,
       }}
     >
       <ConvexProviderWithClerk useAuth={useAuth} client={convex}>

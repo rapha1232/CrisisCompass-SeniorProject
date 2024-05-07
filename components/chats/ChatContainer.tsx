@@ -1,10 +1,11 @@
+import { PropsWithChildren } from "react";
 import { Card } from "../ui/card";
 
-type Props = React.PropsWithChildren<{}>;
+type Props = PropsWithChildren<{}>;
 
 const ChatContainer = ({ children }: Props) => {
   return (
-    <Card className="size-full p-2 flex flex-col gap-2 outline-none border-none">
+    <Card className="flex size-full flex-col gap-2 border-none p-2 outline-none">
       {children}
     </Card>
   );

@@ -95,10 +95,10 @@ const CreateGroupDialog = (props: Props) => {
             <DialogTrigger asChild className="border-none outline-none">
               <CirclePlus className="text-dark100_light900" />
             </DialogTrigger>
-            <TooltipContent className="background-light700_dark300 outline-none border-none text-dark100_light900">
+            <TooltipContent className="background-light700_dark300 text-dark100_light900 border-none outline-none">
               <p>Create Group</p>
             </TooltipContent>
-            <DialogContent className="outline-none border-none background-light700_dark300 text-dark100_light900 ">
+            <DialogContent className="background-light700_dark300 text-dark100_light900 border-none outline-none ">
               <DialogHeader>
                 <DialogTitle>CreateGroup</DialogTitle>
                 <DialogDescription>
@@ -142,7 +142,7 @@ const CreateGroupDialog = (props: Props) => {
                                 asChild
                                 disabled={unselectedFollowers.length === 0}
                               >
-                                <Button className="w-full bg-dark-400 border-none">
+                                <Button className="w-full border-none bg-dark-400">
                                   Select
                                 </Button>
                               </DropdownMenuTrigger>
@@ -150,7 +150,7 @@ const CreateGroupDialog = (props: Props) => {
                                 {unselectedFollowers.map((follower, i) => (
                                   <DropdownMenuCheckboxItem
                                     key={i}
-                                    className="flex items-center gap-2 w-full p-2 background-light700_dark400 text-dark100_light900 outline-none"
+                                    className="background-light700_dark400 text-dark100_light900 flex w-full items-center gap-2 p-2 outline-none"
                                     onCheckedChange={(checked) => {
                                       if (checked) {
                                         form.setValue("members", [
@@ -180,7 +180,7 @@ const CreateGroupDialog = (props: Props) => {
                     }}
                   />
                   {members && members.length ? (
-                    <Card className="flex items-center gap-3 overflow-x-auto w-full h-24 p-2 no-scrollbar border-none">
+                    <Card className="no-scrollbar flex h-24 w-full items-center gap-3 overflow-x-auto border-none p-2">
                       {followers
                         ?.filter((follower) => members.includes(follower._id))
                         .map((follower) => {
@@ -197,7 +197,7 @@ const CreateGroupDialog = (props: Props) => {
                                   </AvatarFallback>
                                 </Avatar>
                                 <X
-                                  className="size-4 absolute bottom-8 left-7 rounded-full cursor-pointer"
+                                  className="absolute bottom-8 left-7 size-4 cursor-pointer rounded-full"
                                   onClick={() =>
                                     form.setValue(
                                       "members",

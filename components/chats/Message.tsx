@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { ReactNode } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 type Props = {
   fromCurrentUser: boolean;
@@ -9,7 +10,7 @@ type Props = {
   content: string[];
   createdAt: number;
   type: string;
-  seen?: React.ReactNode;
+  seen?: ReactNode;
 };
 
 const Message = ({
@@ -46,7 +47,7 @@ const Message = ({
           })}
         >
           {type === "text" ? (
-            <p className="text-wrap break-words whitespace-pre-wrap text-dark100_light900 break-all">
+            <p className="text-dark100_light900 whitespace-pre-wrap text-wrap break-words">
               {content}
             </p>
           ) : null}

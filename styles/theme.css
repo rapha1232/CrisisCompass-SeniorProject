@@ -198,6 +198,14 @@
     background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%);
   }
 
+  .btn-secondary {
+    @apply bg-light-800 dark:bg-dark-400 !important;
+  }
+
+  .btn-tertiary {
+    @apply bg-light-700 dark:bg-dark-300 !important;
+  }
+
   .dark-gradient {
     background: linear-gradient(
       232deg,

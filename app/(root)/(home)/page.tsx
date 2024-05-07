@@ -6,7 +6,6 @@ import Footer from "@/components/Home/Footer";
 import Hero from "@/components/Home/Hero";
 import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
-import Head from "next/head";
 import { useEffect } from "react";
 
 export default function Home() {
@@ -18,9 +17,6 @@ export default function Home() {
   return (
     <>
       <div className="home-container">
-        <Head>
-          <title>Crisis Compass</title>
-        </Head>
         <Hero />
         <Features />
         <FAQ />

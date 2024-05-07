@@ -9,7 +9,7 @@ export async function POST(req: Request, res: Response) {
     const message = requestBody?.message || "No message provided";
     const user = await currentUser();
     await pusherServer.trigger("private-chat", "evt::test", {
-      message: message,
+      message,
       user: user?.firstName,
       date: new Date(),
     });
@@ -18,7 +18,7 @@ export async function POST(req: Request, res: Response) {
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { message: "Failed to test sockets", error: error },
+      { message: "Failed to test sockets", error },
       { status: 500 }
     );
   }

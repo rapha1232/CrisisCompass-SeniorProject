@@ -5,9 +5,9 @@ import Body from "@/components/chats/Body";
 import ChatContainer from "@/components/chats/ChatContainer";
 import ChatInput from "@/components/chats/ChatInput";
 import Header from "@/components/chats/Header";
-import DeleteGroupDialog from "@/components/chats/dialogs/DeleteGroupDialog";
-import LeaveGroupDialog from "@/components/chats/dialogs/LeaveGroupDialog";
-import RemoveFollowerDialog from "@/components/chats/dialogs/RemoveFollowerDialog";
+import DeleteGroupDialog from "@/components/dialogs/DeleteGroupDialog";
+import LeaveGroupDialog from "@/components/dialogs/LeaveGroupDialog";
+import RemoveFollowerDialog from "@/components/dialogs/RemoveFollowerDialog";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
@@ -26,8 +26,8 @@ const ChatPage = ({ params: { chatId } }: ChatProps) => {
     useState(false);
   const [deleteGroupDialogOpen, setDeleteGroupDialogOpen] = useState(false);
   const [leaveGroupDialogOpen, setLeaveGroupDialogOpen] = useState(false);
-  const [addToGroupDialogOpen, setAddToGroupDialogOpen] = useState(false);
-  const [callType, setCallType] = useState<"audio" | "video" | null>(null);
+  // const [addToGroupDialogOpen, setAddToGroupDialogOpen] = useState(false);
+  // const [callType, setCallType] = useState<"audio" | "video" | null>(null);
   return chat === undefined ? (
     <Loading />
   ) : chat === null ? (
@@ -55,13 +55,13 @@ const ChatPage = ({ params: { chatId } }: ChatProps) => {
         options={
           chat.isGroup
             ? [
-                {
-                  label: "Add to Group",
-                  destructive: false,
-                  onClick() {
-                    setAddToGroupDialogOpen(true);
-                  },
-                },
+                // {
+                //   label: "Add to Group",
+                //   destructive: false,
+                //   onClick() {
+                //     setAddToGroupDialogOpen(true);
+                //   },
+                // },
                 {
                   label: "Leave Group",
                   destructive: false,

@@ -19,7 +19,7 @@ const Body = ({ members }: Props) => {
   const msgs = useQuery(api.messages.get, {
     id: chatId as Id<"chats">,
   });
-  const { mutate: markAsRead, pending } = useMutationState(api.chat.markRead);
+  const { mutate: markAsRead } = useMutationState(api.chat.markRead);
 
   useEffect(() => {
     if (msgs && msgs.length > 0) {
@@ -35,17 +35,17 @@ const Body = ({ members }: Props) => {
     switch (names.length) {
       case 1:
         return (
-          <p className="text-dark100_light900 text-sm text-right">{`Seen by ${names[0]}`}</p>
+          <p className="text-dark100_light900 text-right text-sm">{`Seen by ${names[0]}`}</p>
         );
       case 2:
         return (
-          <p className="text-dark100_light900 text-sm text-right">{`Seen by ${names[0]} & ${names[1]}`}</p>
+          <p className="text-dark100_light900 text-right text-sm">{`Seen by ${names[0]} & ${names[1]}`}</p>
         );
       default:
         return (
           <Tooltip>
             <TooltipTrigger>
-              <p className="text-dark100_light900 text-sm text-right">
+              <p className="text-dark100_light900 text-right text-sm">
                 {`Seen by ${names[0]}, ${names[1]} & ${names.length - 2} more `}
               </p>
             </TooltipTrigger>
@@ -69,7 +69,7 @@ const Body = ({ members }: Props) => {
     return formatSeenBy(seenUsers);
   };
   return (
-    <div className="flex-1 w-full flex overflow-y-scroll flex-col-reverse gap-2 p-3 no-scrollbar">
+    <div className="no-scrollbar flex w-full flex-1 flex-col-reverse gap-2 overflow-y-scroll p-3">
       {msgs?.map((msg, index) => {
         const lastByUser = msgs[index - 1]?.senderId === msgs[index].senderId;
         const seenMessage = msg.isCurrentUser

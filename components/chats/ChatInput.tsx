@@ -4,7 +4,6 @@ import { useMutationState } from "@/hooks/useMutationState";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ConvexError } from "convex/values";
 import { LucideSend } from "lucide-react";
-import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 import { toast } from "sonner";
@@ -50,7 +49,6 @@ const ChatInput = () => {
       });
   };
 
-  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const handleInputChange = (event: any) => {
     const { value, selectionStart } = event.target;
     if (selectionStart !== null) {
@@ -58,12 +56,12 @@ const ChatInput = () => {
     }
   };
   return (
-    <Card className="w-full p-2 rounded-lg relative outline-none border-none">
-      <div className="flex gap-2 items-end w-full">
+    <Card className="relative w-full rounded-lg border-none p-2 outline-none">
+      <div className="flex w-full items-end gap-2">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="flex gap-2 items-end w-full"
+            className="flex w-full items-end gap-2"
           >
             <FormField
               control={form.control}
@@ -72,10 +70,10 @@ const ChatInput = () => {
                 return (
                   <FormItem className="size-full">
                     <FormControl>
-                      <div className="p-0 m-0 flex flex-row gap-2">
+                      <div className="m-0 flex flex-row gap-2 p-0">
                         <TextareaAutosize
                           onKeyDown={async (e) => {
-                            if (e.key === "Enter" && !e.shiftKey) {
+                            if (e.key === "Enter" && !e.shiftKey && !pending) {
                               e.preventDefault();
                               await form.handleSubmit(handleSubmit)();
                             }
@@ -86,18 +84,18 @@ const ChatInput = () => {
                           onChange={handleInputChange}
                           onClick={handleInputChange}
                           placeholder="Your Message..."
-                          className="background-light700_dark300 min-size-full flex-1 resize-none border-0 outline-0 bg-card text-dark100_light900 placeholder:text-muted-foreground p-1.5 rounded-md"
+                          className="background-light700_dark300 text-dark100_light900 min-h-full min-w-full flex-1 resize-none rounded-md border-0 p-1.5 outline-0"
                         />
-                        <Button className="p-0 m-0" size={"icon"}>
-                          <LucideSend
-                            size={32}
-                            color="#AD38D7"
-                            className="text-muted-foreground "
-                            onClick={async (e) => {
-                              e.preventDefault();
-                              await form.handleSubmit(handleSubmit)();
-                            }}
-                          />
+                        <Button
+                          className="m-0 p-0"
+                          size={"icon"}
+                          onClick={async (e) => {
+                            e.preventDefault();
+                            await form.handleSubmit(handleSubmit)();
+                          }}
+                          disabled={pending}
+                        >
+                          <LucideSend size={32} color="#AD38D7" />
                         </Button>
                       </div>
                     </FormControl>

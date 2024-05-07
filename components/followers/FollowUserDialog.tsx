@@ -4,7 +4,7 @@ import { useMutationState } from "@/hooks/useMutationState";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "convex/react";
 import { ConvexError } from "convex/values";
-import { UserPlus } from "lucide-react";
+import { Badge, UserPlus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -42,6 +42,7 @@ const FollowUserDialog = () => {
   const { mutate: createRequest, pending } = useMutationState(
     api.request.create
   );
+  const newFollowRequests = useQuery(api.requests.count);
   const form = useForm<z.infer<typeof FollowUserSchema>>({
     resolver: zodResolver(FollowUserSchema),
     defaultValues: {
@@ -68,15 +69,20 @@ const FollowUserDialog = () => {
         <TooltipTrigger>
           <Button size={"icon"}>
             <DialogTrigger>
+              {newFollowRequests !== 0 && newFollowRequests !== null && (
+                <Badge className="absolute right-0 top-0 bg-primary-500 text-light-900">
+                  {newFollowRequests}
+                </Badge>
+              )}
               <UserPlus className="text-dark100_light900" />
             </DialogTrigger>
           </Button>
         </TooltipTrigger>
-        <TooltipContent className="background-light700_dark300 outline-none border-none">
+        <TooltipContent className="background-light700_dark300 border-none outline-none">
           <p className="text-dark100_light900">Add friend</p>
         </TooltipContent>
       </Tooltip>
-      <DialogContent className="text-dark100_light900 background-light700_dark300 outline-none border-none">
+      <DialogContent className="text-dark100_light900 background-light700_dark300 border-none outline-none">
         <DialogHeader>
           <DialogTitle>Add Friend</DialogTitle>
           <DialogDescription>
@@ -111,7 +117,7 @@ const FollowUserDialog = () => {
               <Button
                 type="submit"
                 disabled={pending}
-                className="bg-primary-500"
+                className="w-full bg-primary-500"
               >
                 Send Request
               </Button>
@@ -120,13 +126,13 @@ const FollowUserDialog = () => {
         </Form>
         <div className="w-full border" />
         <div className="background-light700_dark300 ">
-          <h5 className="text-xl font-bold w-full text-center text-gray-100">
+          <h5 className="w-full text-center text-xl font-bold text-gray-100">
             Incoming Follow Requests
           </h5>
           <div>
             {requests === null && <Loading />}
             {requests?.length === 0 && (
-              <h6 className="text-xs font-bold w-full text-center py-4 text-gray-100">
+              <h6 className="w-full py-4 text-center text-xs font-bold text-gray-100">
                 No Requests Found
               </h6>
             )}

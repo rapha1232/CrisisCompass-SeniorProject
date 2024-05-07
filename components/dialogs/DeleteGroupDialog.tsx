@@ -21,29 +21,31 @@ type Props = {
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const LeaveGroupDialog = ({ chatId, open, setOpen }: Props) => {
-  const { mutate: leaveGroup, pending } = useMutationState(api.chat.leaveGroup);
+const DeleteGroupDialog = ({ chatId, open, setOpen }: Props) => {
+  const { mutate: deleteGroup, pending } = useMutationState(
+    api.chat.deleteGroup
+  );
 
-  const handleLeaveGroup = async () => {
-    leaveGroup({ chatId })
+  const handleDeleteGroup = async () => {
+    deleteGroup({ chatId })
       .then(() => {
-        toast.success("Group left");
+        toast.success("Group deleted");
       })
       .catch((err) => {
         toast.error(
-          err instanceof ConvexError ? err.data : "Failed to leave group"
+          err instanceof ConvexError ? err.data : "Failed to delete group"
         );
       });
   };
   return (
-    <AlertDialog open={open} setOpen={setOpen}>
-      <AlertDialogContent className="background-light700_dark300 border-none text-dark100_light900">
+    <AlertDialog open={open}>
+      <AlertDialogContent className="background-light700_dark300 text-dark100_light900 border-none">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. You will not be able to access this
-            group unless re-added by the admin. Individual chats will still work
-            as normal.
+            This action cannot be undone. All messages will be deleted and you
+            will not be able to message this group again or recover the
+            messages. Individual chats will still work as normal.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -56,10 +58,10 @@ const LeaveGroupDialog = ({ chatId, open, setOpen }: Props) => {
           </AlertDialogCancel>
           <AlertDialogAction
             disabled={pending}
-            onClick={handleLeaveGroup}
+            onClick={handleDeleteGroup}
             className="bg-red-600"
           >
-            Leave
+            Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -67,4 +69,4 @@ const LeaveGroupDialog = ({ chatId, open, setOpen }: Props) => {
   );
 };
 
-export default LeaveGroupDialog;
+export default DeleteGroupDialog;

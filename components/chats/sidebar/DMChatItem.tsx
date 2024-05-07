@@ -29,7 +29,7 @@ const DMChatItem = ({
       href={`/chats/${id}`}
       className={`w-full hover:bg-accent-purple ${additionalClasses}`}
     >
-      <Card className="p-2 flex flex-row items-center justify-between gap-4 truncate border-none text-dark100_light900">
+      <Card className="text-dark100_light900 flex flex-row items-center justify-between gap-4 truncate border-none p-2">
         <div className="flex flex-row items-center gap-4 truncate">
           <Avatar className="size-12">
             <AvatarImage src={imageUrl} />
@@ -40,19 +40,15 @@ const DMChatItem = ({
           <div className="flex flex-col truncate">
             <h4 className="truncate">{name}</h4>
             {lastMessageSender && lastMessageContent ? (
-              <span className="text-sm text-muted-foreground flex truncate overflow-ellipsis">
+              <span className="flex truncate text-sm">
                 <p className="font-semibold">
                   {lastMessageSender}
                   {":"}&nbsp;
-                  <p className="truncate overflow-ellipsis">
-                    {lastMessageContent}
-                  </p>
+                  <p className="truncate">{lastMessageContent}</p>
                 </p>
               </span>
             ) : (
-              <p className="text-sm text-muted-foreground truncate">
-                Start your conversation
-              </p>
+              <p className="truncate text-sm">Start your conversation</p>
             )}
           </div>
         </div>

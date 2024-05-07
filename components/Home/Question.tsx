@@ -6,29 +6,10 @@ const Question = ({
   answer: string;
 }) => {
   return (
-    <>
-      <div className="question1-container">
-        <span className="question1-text heading3">{question}</span>
-        <span className="bodySmall">{answer}</span>
-      </div>
-      <style jsx>
-        {`
-          .question1-container {
-            gap: var(--dl-space-space-unit);
-            flex: 1;
-            width: auto;
-            height: auto;
-            display: flex;
-            position: relative;
-            align-items: flex-start;
-            flex-direction: column;
-          }
-          .question1-text {
-            font-weight: 700;
-          }
-        `}
-      </style>
-    </>
+    <div className="relative flex flex-1 flex-col items-start gap-4">
+      <span className="heading3 font-bold">{question}</span>
+      <span className="bodySmall">{answer}</span>
+    </div>
   );
 };
 

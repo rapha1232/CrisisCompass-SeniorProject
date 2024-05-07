@@ -1,4 +1,4 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 export const store = mutation({
@@ -58,5 +58,52 @@ export const getCurrentUser = query({
         q.eq("tokenIdentifier", identity.tokenIdentifier)
       )
       .unique();
+  },
+});
+
+export const updateUser = mutation({
+  args: {
+    userId: v.id("users"),
+    phoneNumber: v.string(),
+    location: v.array(v.number()),
+    approveNotification: v.boolean(),
+    skills: v.array(
+      v.union(
+        v.literal("Medical"),
+        v.literal("Food and Water"),
+        v.literal("Shelter"),
+        v.literal("Transportation"),
+        v.literal("Clothing"),
+        v.literal("Other")
+      )
+    ),
+  },
+  handler: async (
+    ctx,
+    { userId, approveNotification, location, phoneNumber, skills }
+  ) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("Called (GET_CHATS) without authenticated user");
+    }
+    const currentUser = await getCurrentUser(ctx, userId);
+    if (!currentUser) {
+      throw new ConvexError("User not found");
+    }
+
+    Promise.all(
+      skills.map(async (skill) => {
+        await ctx.db.insert("skills", {
+          userId,
+          skill,
+        });
+      })
+    );
+
+    await ctx.db.patch(userId, {
+      phoneNumber,
+      location,
+      approveNotification,
+    });
   },
 });

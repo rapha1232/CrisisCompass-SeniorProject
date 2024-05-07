@@ -11,7 +11,7 @@ export const create = mutation({
     if (!identity) {
       throw new ConvexError("User not authenticated");
     }
-    if (args.email == identity.email) {
+    if (args.email === identity.email) {
       throw new ConvexError("You can't request yourself");
     }
     const currentUser = await getCurrentUser(ctx, args);

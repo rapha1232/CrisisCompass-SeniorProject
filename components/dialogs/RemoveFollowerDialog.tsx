@@ -38,8 +38,8 @@ const RemoveFollowerDialog = ({ chatId, open, setOpen }: Props) => {
       });
   };
   return (
-    <AlertDialog open={open} setOpen={setOpen}>
-      <AlertDialogContent className="background-light700_dark300 border-none text-dark100_light900">
+    <AlertDialog open={open}>
+      <AlertDialogContent className="background-light700_dark300 text-dark100_light900 border-none">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>

@@ -22,7 +22,7 @@ export const FollowRequest = ({ otherUser, id }: FollowRequestProps) => {
     api.request.accept
   );
   return (
-    <Card className="w-full p-2 flex flex-row items-center justify-between gap-2 text-dark100_light900 border-none">
+    <Card className="text-dark100_light900 flex w-full flex-row items-center justify-between gap-2 border-none p-2">
       <div className="flex items-center gap-4 truncate">
         <Avatar>
           <AvatarImage src={otherUser.imageURL} />
@@ -32,9 +32,7 @@ export const FollowRequest = ({ otherUser, id }: FollowRequestProps) => {
         </Avatar>
         <div className="flex flex-col truncate">
           <h4 className="truncate">{otherUser.fullname}</h4>
-          <p className="text-xs text-muted-foreground truncate">
-            {otherUser.email}
-          </p>
+          <p className="truncate text-xs">{otherUser.email}</p>
         </div>
       </div>
       <div className="flex items-center gap-2">
