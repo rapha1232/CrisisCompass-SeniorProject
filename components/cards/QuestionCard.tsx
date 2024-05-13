@@ -6,7 +6,7 @@ const Question = ({
   answer: string;
 }) => {
   return (
-    <div className="relative flex flex-1 flex-col items-start gap-4">
+    <div className="text-dark100_light900 relative flex flex-1 flex-col items-start gap-4">
       <span className="heading3 font-bold">{question}</span>
       <span className="bodySmall">{answer}</span>
     </div>

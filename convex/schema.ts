@@ -6,6 +6,7 @@ export default defineSchema({
     tokenIdentifier: v.string(),
     email: v.string(),
     fullname: v.string(),
+    username: v.optional(v.string()),
     phoneNumber: v.optional(v.string()),
     location: v.optional(v.array(v.number())),
     imageURL: v.optional(v.string()),
@@ -73,7 +74,33 @@ export default defineSchema({
     description: v.string(),
     location: v.array(v.number()),
     status: v.union(v.literal("Active"), v.literal("Resolved")),
+    skills: v.array(
+      v.union(
+        v.literal("Medical"),
+        v.literal("Food and Water"),
+        v.literal("Shelter"),
+        v.literal("Transportation"),
+        v.literal("Clothing"),
+        v.literal("Other")
+      )
+    ),
   })
     .index("by_sender", ["senderId"])
     .index("by_status", ["status"]),
+  organization: defineTable({
+    adminId: v.id("users"),
+    name: v.string(),
+    email: v.string(),
+    phoneNumber: v.string(),
+    imageUrl: v.string(),
+    description: v.string(),
+    location: v.array(v.number()),
+  }).index("by_adminId", ["adminId"]),
+  organizationMembers: defineTable({
+    memberId: v.id("users"),
+    organizationId: v.id("organization"),
+  })
+    .index("by_memberId", ["memberId"])
+    .index("by_organizationId", ["organizationId"])
+    .index("by_memberId_organizationId", ["memberId", "organizationId"]),
 });

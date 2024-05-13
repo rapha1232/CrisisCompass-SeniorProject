@@ -1,5 +1,5 @@
 import { SignUp } from "@clerk/nextjs";
 
 export default function RegisterPage() {
-  return <SignUp />;
+  return <SignUp path="/register" />;
 }

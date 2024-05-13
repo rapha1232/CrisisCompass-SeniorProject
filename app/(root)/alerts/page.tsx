@@ -1,5 +1,5 @@
 "use client";
-import AlertCard from "@/components/AlertCard";
+import AlertCard from "@/components/cards/AlertCard";
 import CreateAlertDialog from "@/components/dialogs/CreateAlertDialog";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";

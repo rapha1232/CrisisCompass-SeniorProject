@@ -56,7 +56,7 @@ const ChatInput = () => {
     }
   };
   return (
-    <Card className="relative w-full rounded-lg border-none p-2 outline-none">
+    <Card className="sticky bottom-2 w-full rounded-lg border-none p-2 outline-none">
       <div className="flex w-full items-end gap-2">
         <Form {...form}>
           <form
@@ -84,7 +84,7 @@ const ChatInput = () => {
                           onChange={handleInputChange}
                           onClick={handleInputChange}
                           placeholder="Your Message..."
-                          className="background-light700_dark300 text-dark100_light900 min-h-full min-w-full flex-1 resize-none rounded-md border-0 p-1.5 outline-0"
+                          className="background-light700_dark300 text-dark100_light900 flex-1 resize-none rounded-md border-0 p-1.5 outline-0"
                         />
                         <Button
                           className="m-0 p-0"
@@ -95,7 +95,10 @@ const ChatInput = () => {
                           }}
                           disabled={pending}
                         >
-                          <LucideSend size={32} color="#AD38D7" />
+                          <LucideSend
+                            size={32}
+                            className="text-dark300_light900"
+                          />
                         </Button>
                       </div>
                     </FormControl>

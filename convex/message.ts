@@ -9,13 +9,9 @@ export const create = mutation({
     content: v.array(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Called (GET_CHAT) without authenticated user");
-    }
     const currentUser = await getCurrentUser(ctx, args);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
     }
 
     const membership = await ctx.db

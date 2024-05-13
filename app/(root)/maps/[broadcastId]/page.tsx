@@ -1,9 +1,13 @@
 "use client";
 import { Map } from "@/components/Maps/Map";
+import { Button } from "@/components/ui/button";
+import { customMarker } from "@/constants";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
-import L, { LatLng } from "leaflet";
+import { LatLng } from "leaflet";
+import Image from "next/image";
+import Link from "next/link";
 import { Marker, Popup } from "react-leaflet";
 
 interface AlertProps {
@@ -12,26 +16,19 @@ interface AlertProps {
   };
 }
 
-const myIcon = new L.Icon({
-  iconUrl: "/assets/icons/mapMarker.svg",
-  iconSize: [50, 50],
-  iconAnchor: [25, 50],
-  popupAnchor: [0, -15],
-  className: "fill-red-600",
-});
-
 const AlertPage = ({ params: { broadcastId } }: AlertProps) => {
   const broadcast = useQuery(api.broadcasts.getBroadcast, { id: broadcastId });
   return (
-    <div className="both-center flex size-full flex-col">
+    <div className="both-center flex size-full flex-col gap-2">
       <Map
         zoom={10}
         center={broadcast?.location as unknown as LatLng}
         full
         className="size-[90%]"
+        broadcast={broadcast ?? undefined}
       >
         <Marker
-          icon={myIcon}
+          icon={customMarker}
           position={
             broadcast
               ? (broadcast.location as unknown as LatLng)
@@ -41,6 +38,22 @@ const AlertPage = ({ params: { broadcastId } }: AlertProps) => {
           <Popup>{broadcast?.title}</Popup>
         </Marker>
       </Map>
+      <Button className="text-dark100_light900">
+        <Link
+          href={`https://www.google.com/maps/dir/?api=1&destination=${broadcast?.location[0]},${broadcast?.location[1]}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2"
+        >
+          <Image
+            src={"/assets/images/google-maps.svg"}
+            width={20}
+            height={20}
+            alt="Google Maps"
+          />
+          Open with Google Maps
+        </Link>
+      </Button>
     </div>
   );
 };

@@ -41,11 +41,11 @@ const DMChatItem = ({
             <h4 className="truncate">{name}</h4>
             {lastMessageSender && lastMessageContent ? (
               <span className="flex truncate text-sm">
-                <p className="font-semibold">
+                <span className="font-semibold">
                   {lastMessageSender}
                   {":"}&nbsp;
                   <p className="truncate">{lastMessageContent}</p>
-                </p>
+                </span>
               </span>
             ) : (
               <p className="truncate text-sm">Start your conversation</p>

@@ -1,4 +1,13 @@
 import { getPusherInstance } from "@/lib/pusher/server";
+import * as PusherPushNotifications from "@pusher/push-notifications-web";
+
+const beamsClient = new PusherPushNotifications.Client({
+  instanceId: "ee0c4547-d86d-4d77-b268-ded3c3c9e7bf",
+});
+
+beamsClient.start().then(() => {
+  console.log("Beams client started");
+});
 
 const pusherServer = getPusherInstance();
 

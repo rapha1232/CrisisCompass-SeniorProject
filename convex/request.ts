@@ -7,23 +7,19 @@ export const create = mutation({
     email: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("User not authenticated");
-    }
-    if (args.email === identity.email) {
-      throw new ConvexError("You can't request yourself");
-    }
     const currentUser = await getCurrentUser(ctx, args);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
+    }
+    if (args.email === currentUser.email) {
+      throw new ConvexError("You can't request yourself");
     }
     const reciever = await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", args.email))
       .unique();
     if (!reciever) {
-      throw new ConvexError("User not found");
+      return null;
     }
 
     const requestAlreadySent = await ctx.db
@@ -59,13 +55,9 @@ export const deny = mutation({
     id: v.id("requests"),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("User not authenticated");
-    }
     const currentUser = await getCurrentUser(ctx, args);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
     }
     const request = await ctx.db.get(args.id);
     if (!request || request.reciever !== currentUser._id) {
@@ -81,13 +73,9 @@ export const accept = mutation({
     id: v.id("requests"),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("User not authenticated");
-    }
     const currentUser = await getCurrentUser(ctx, args);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
     }
     const request = await ctx.db.get(args.id);
     if (!request || request.reciever !== currentUser._id) {

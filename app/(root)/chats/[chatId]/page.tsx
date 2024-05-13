@@ -21,7 +21,6 @@ interface ChatProps {
 
 const ChatPage = ({ params: { chatId } }: ChatProps) => {
   const chat = useQuery(api.chat.get, { id: chatId });
-
   const [removeFollowerDialogOpen, setRemoveFollowerDialogOpen] =
     useState(false);
   const [deleteGroupDialogOpen, setDeleteGroupDialogOpen] = useState(false);
@@ -50,7 +49,12 @@ const ChatPage = ({ params: { chatId } }: ChatProps) => {
         chatId={chatId}
       />
       <Header
-        name={(chat.isGroup ? chat.name : chat.otherMember?.fullname) || ""}
+        chatId={chatId}
+        name={
+          (chat.isGroup
+            ? chat.name
+            : chat.otherMember?.username ?? chat.otherMember?.fullname) || ""
+        }
         imageUrl={chat.otherMember?.imageURL || ""}
         options={
           chat.isGroup

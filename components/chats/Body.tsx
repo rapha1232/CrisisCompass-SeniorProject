@@ -64,7 +64,9 @@ const Body = ({ members }: Props) => {
   const getSeenMessage = (messageId: Id<"messages">) => {
     const seenUsers = members
       .filter((member) => member.lastSeenMessageId === messageId)
-      .map((user) => user.fullname!.split(" ")[0]);
+      .map((user) =>
+        user.username ? user.username : user.fullname!.split(" ")[0]
+      );
     if (seenUsers.length === 0) return undefined;
     return formatSeenBy(seenUsers);
   };

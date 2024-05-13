@@ -1,5 +1,5 @@
 import { QnA } from "@/constants";
-import Question from "./Question";
+import Question from "../cards/QuestionCard";
 
 export default function FAQ() {
   return (
@@ -9,10 +9,10 @@ export default function FAQ() {
           <div className="home-container4">
             <span className="overtext">
               <span>FAQ</span>
-              <br></br>
+              <br />
             </span>
-            <h2 className="home-text-upper heading2">Common questions</h2>
-            <span className="home-text-lower bodyLarge">
+            <h2 className="heading2 mb-6">Common questions</h2>
+            <span className="home-text-lower bodyLarge text-dark100_light900">
               <span>
                 Here are some of the most common questions that we get.
               </span>

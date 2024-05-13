@@ -1,5 +1,4 @@
 import { SignedIn, UserButton } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import Image from "next/image";
 import Link from "next/link";
 import MobileNav from "./MobileNav";
@@ -23,27 +22,12 @@ const NavBar = () => {
         <Theme />
         <SignedIn>
           <UserButton
-            afterSignOutUrl="/"
             appearance={{
               elements: {
                 avatarBox: "h-10 w-10",
               },
-              variables: {
-                colorPrimary: "#AE38D6",
-              },
-              baseTheme: dark,
             }}
           />
-          {/* {(sessionClaims?.membership as Record<string, string>) && (
-            <OrganizationSwitcher
-              appearance={{
-                baseTheme: dark,
-                elements: {
-                  avatarBox: "h-10 w-10",
-                },
-              }}
-            />
-          )} */}
         </SignedIn>
         <MobileNav />
       </div>

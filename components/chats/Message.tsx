@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import Link from "next/link";
 import { ReactNode } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 type Props = {
@@ -50,6 +51,10 @@ const Message = ({
             <p className="text-dark100_light900 whitespace-pre-wrap text-wrap break-words">
               {content}
             </p>
+          ) : type === "videoCall" ? (
+            <Link href={`call/${content}`} className="text-dark100_light900">
+              Press to join call
+            </Link>
           ) : null}
           <p
             className={cn("text-xs flex w-full my-1 text-dark100_light900", {

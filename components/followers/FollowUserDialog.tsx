@@ -4,11 +4,12 @@ import { useMutationState } from "@/hooks/useMutationState";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "convex/react";
 import { ConvexError } from "convex/values";
-import { Badge, UserPlus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Loading } from "../Global/loading";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -67,13 +68,15 @@ const FollowUserDialog = () => {
     <Dialog>
       <Tooltip>
         <TooltipTrigger>
-          <Button size={"icon"}>
+          <Button size={"icon"} className="mr-2">
             <DialogTrigger>
-              {newFollowRequests !== 0 && newFollowRequests !== null && (
-                <Badge className="absolute right-0 top-0 bg-primary-500 text-light-900">
-                  {newFollowRequests}
-                </Badge>
-              )}
+              {newFollowRequests !== null &&
+                newFollowRequests !== undefined &&
+                newFollowRequests !== 0 && (
+                  <Badge className="absolute right-0 top-0 bg-green-500 text-light-900">
+                    {newFollowRequests}
+                  </Badge>
+                )}
               <UserPlus className="text-dark100_light900" />
             </DialogTrigger>
           </Button>

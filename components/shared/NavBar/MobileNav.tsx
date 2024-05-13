@@ -11,6 +11,7 @@ import { sidebarLinks } from "@/constants";
 import { api } from "@/convex/_generated/api";
 import { SignOutButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
+import { AlertCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,6 +20,7 @@ import { HiOutlineLogout } from "react-icons/hi";
 const NavContent = () => {
   const pathname = usePathname();
   const newFollowRequests = useQuery(api.requests.count);
+  const newEmergencies = useQuery(api.broadcasts.getUserNewEmergencies);
   return (
     <section className="flex h-full flex-col  gap-6 pt-16">
       {sidebarLinks.map((link) => {
@@ -41,6 +43,15 @@ const NavContent = () => {
                 link.label === "Chats" && (
                   <Badge className="absolute right-0  top-0 bg-primary-500 text-light-900">
                     {newFollowRequests}
+                  </Badge>
+                )}
+              {newEmergencies !== null &&
+                newEmergencies !== undefined &&
+                newEmergencies.length !== 0 &&
+                link.label === "Alerts" && (
+                  <Badge className="absolute right-0 top-0 flex items-center gap-2 bg-transparent text-red-600">
+                    <AlertCircle className="" />
+                    {newEmergencies.length}
                   </Badge>
                 )}
               <Image
@@ -95,14 +106,14 @@ const MobileNav = () => {
           <SignedOut>
             <div className="flex flex-col gap-3">
               <SheetClose asChild>
-                <Link href="/sign-in">
+                <Link href="/login">
                   <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
                     <span className="text-primary-500">Log In</span>
                   </Button>
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/sign-up">
+                <Link href="/register">
                   <Button className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
                     <span className="text-primary-500">Sign Up</span>
                   </Button>

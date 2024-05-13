@@ -7,13 +7,9 @@ export const create = mutation({
     chatId: v.id("chats"),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Called (GET_CHAT) without authenticated user");
-    }
     const currentUser = await getCurrentUser(ctx, args);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
     }
     const chat = await ctx.db.get(args.chatId);
     if (!chat) {
@@ -62,13 +58,9 @@ export const remove = mutation({
     chatId: v.id("chats"),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Called (GET_CHAT) without authenticated user");
-    }
     const currentUser = await getCurrentUser(ctx, args);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
     }
 
     const chat = await ctx.db.get(args.chatId);

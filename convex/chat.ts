@@ -5,13 +5,9 @@ import { getCurrentUser } from "./users";
 export const get = query({
   args: { id: v.id("chats") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Called (GET_CHAT) without authenticated user");
-    }
     const currentUser = await getCurrentUser(ctx, args);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
     }
 
     const chat = await ctx.db.get(args.id);
@@ -59,6 +55,7 @@ export const get = query({
             return {
               _id: membership._id,
               fullname: member.fullname,
+              username: member.username,
             };
           })
       );
@@ -76,13 +73,9 @@ export const deleteGroup = mutation({
     chatId: v.id("chats"),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Called (GET_CHAT) without authenticated user");
-    }
     const currentUser = await getCurrentUser(ctx, args);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
     }
 
     const chat = await ctx.db.get(args.chatId);
@@ -125,13 +118,9 @@ export const leaveGroup = mutation({
     chatId: v.id("chats"),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Called (GET_CHAT) without authenticated user");
-    }
     const currentUser = await getCurrentUser(ctx, args);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
     }
 
     const chat = await ctx.db.get(args.chatId);
@@ -160,13 +149,9 @@ export const markRead = mutation({
     messageId: v.id("messages"),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Called (GET_CHAT) without authenticated user");
-    }
     const currentUser = await getCurrentUser(ctx, args);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
     }
 
     const membership = await ctx.db

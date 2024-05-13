@@ -1,4 +1,4 @@
-import { ConvexError, v } from "convex/values";
+import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 export const store = mutation({
@@ -17,6 +17,25 @@ export const store = mutation({
       )
       .unique();
 
+    if (
+      user &&
+      !user.phoneNumber &&
+      identity.phoneNumber &&
+      identity.phoneNumberVerified
+    ) {
+      await ctx.db.patch(user._id, {
+        phoneNumber: identity.phoneNumber,
+      });
+      return user._id;
+    }
+
+    if (user && user.username === undefined && identity.nickname) {
+      await ctx.db.patch(user._id, {
+        username: identity.nickname,
+      });
+      return user._id;
+    }
+
     if (user !== null) {
       return user._id;
     }
@@ -26,30 +45,31 @@ export const store = mutation({
       email: identity.email!,
       fullname: identity.name!,
       imageURL: identity.pictureUrl,
+      username: identity.nickname,
     });
 
     return userId;
   },
 });
 
-export const get = query({
-  args: { userId: v.id("users") },
-  handler: async (ctx, { userId }) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Called currentUser without authenticated user");
-    }
+// export const get = query({
+//   args: { userId: v.id("users") },
+//   handler: async (ctx, { userId }) => {
+//     const identity = await ctx.auth.getUserIdentity();
+//     if (!identity) {
+//       throw new Error("Called currentUser without authenticated user");
+//     }
 
-    return await ctx.db.get(userId);
-  },
-});
+//     return await ctx.db.get(userId);
+//   },
+// });
 
 export const getCurrentUser = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      throw new Error("Called currentUser without authenticated user");
+      return null;
     }
 
     return await ctx.db
@@ -64,7 +84,6 @@ export const getCurrentUser = query({
 export const updateUser = mutation({
   args: {
     userId: v.id("users"),
-    phoneNumber: v.string(),
     location: v.array(v.number()),
     approveNotification: v.boolean(),
     skills: v.array(
@@ -78,17 +97,10 @@ export const updateUser = mutation({
       )
     ),
   },
-  handler: async (
-    ctx,
-    { userId, approveNotification, location, phoneNumber, skills }
-  ) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Called (GET_CHATS) without authenticated user");
-    }
+  handler: async (ctx, { userId, approveNotification, location, skills }) => {
     const currentUser = await getCurrentUser(ctx, userId);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
     }
 
     Promise.all(
@@ -101,9 +113,10 @@ export const updateUser = mutation({
     );
 
     await ctx.db.patch(userId, {
-      phoneNumber,
       location,
       approveNotification,
     });
   },
 });
+
+// export const getUsersWithNotif = in

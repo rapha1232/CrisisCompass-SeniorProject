@@ -2,16 +2,11 @@ import { skills } from "@/constants";
 import { api } from "@/convex/_generated/api";
 import { useMutationState } from "@/hooks/useMutationState";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckedState } from "@radix-ui/react-checkbox";
 import { useQuery } from "convex/react";
 import { ConvexError } from "convex/values";
 import { X } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import {
-  isPossiblePhoneNumber,
-  isValidPhoneNumber,
-} from "react-phone-number-input";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "../ui/button";
@@ -35,13 +30,11 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const GetStartedSchema = z.object({
@@ -57,10 +50,6 @@ const GetStartedSchema = z.object({
     message:
       "You must approve notifications to get notified when someone needs help in your area.",
   }),
-  phoneNumber: z
-    .string()
-    .refine(isValidPhoneNumber, { message: "Invalid phone number" })
-    .refine(isPossiblePhoneNumber),
 });
 
 const GetStartedDialog = () => {
@@ -76,7 +65,6 @@ const GetStartedDialog = () => {
       skills: [],
       location: [],
       approveNotifications: false,
-      phoneNumber: "",
     },
   });
 
@@ -87,26 +75,11 @@ const GetStartedDialog = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skillsInForm.length]);
 
-  const onCheckLocation = (checked: CheckedState) => {
-    if (form.watch("location", []) && checked) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        console.log(position);
-        form.setValue("location", [
-          position.coords.latitude,
-          position.coords.longitude,
-        ]);
-      });
-    } else {
-      form.setValue("location", []);
-    }
-  };
-
   const handleSubmit = async (values: z.infer<typeof GetStartedSchema>) => {
     await updateUser({
       skills: values.skills,
       location: values.location,
       approveNotification: values.approveNotifications,
-      phoneNumber: values.phoneNumber,
       userId: currUser!._id,
     })
       .then(() => {
@@ -124,9 +97,11 @@ const GetStartedDialog = () => {
     <Dialog>
       <Tooltip>
         <TooltipTrigger className="border-none outline-none">
-          <Button size={"icon"}>
+          <Button>
             <DialogTrigger asChild className="border-none outline-none">
-              <Button className="buttonFilled">Get Started</Button>
+              <Button className="text-dark100_light900 hover:bg-transparent">
+                Get Started
+              </Button>
             </DialogTrigger>
             <TooltipContent className="background-light700_dark300 text-dark100_light900 border-none outline-none">
               <p>Set up your volunteer profile</p>
@@ -151,7 +126,7 @@ const GetStartedDialog = () => {
                     render={({ field }) => {
                       return (
                         <FormItem>
-                          <FormLabel>Notifications</FormLabel>
+                          <FormLabel>Email Notifications</FormLabel>
                           <FormControl>
                             <div className="flex space-x-2">
                               <Checkbox
@@ -165,12 +140,12 @@ const GetStartedDialog = () => {
                                   htmlFor="approveNotification"
                                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
-                                  Approve Notifications
+                                  Approve Email Notifications
                                 </label>
                                 <p className="text-sm">
-                                  Get notified when someone needs help in your
-                                  area. If unchecked, crises will only appear in
-                                  the alert tab of the website.
+                                  Get notified by mail when someone needs help
+                                  in your area. If unchecked, crises will only
+                                  appear in the alert tab of the website.
                                 </p>
                               </div>
                             </div>
@@ -221,30 +196,10 @@ const GetStartedDialog = () => {
                       );
                     }}
                   />
-                  <FormField
-                    control={form.control}
-                    name="phoneNumber"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col items-start">
-                        <FormLabel className="text-left">
-                          Phone Number (format: +(Country Code)(Phone Number))
-                          <br />
-                          eg: +96112345678
-                        </FormLabel>
-                        <FormControl className="w-full">
-                          <Input
-                            className="background-light700_dark300 text-dark100_light900 w-full"
-                            placeholder="Enter a phone number"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription className="text-left">
-                          Enter a phone number
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="text-red-500">
+                    Make sure you verify your phone number in your profile, you
+                    wont be able to set up your profile without it
+                  </div>
                   <FormField
                     control={form.control}
                     name="skills"

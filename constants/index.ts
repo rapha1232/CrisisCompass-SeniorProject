@@ -1,4 +1,5 @@
 import { SidebarLink } from "@/types";
+import L from "leaflet";
 
 export const sidebarLinks: SidebarLink[] = [
   {
@@ -59,7 +60,7 @@ export const features = [
   },
   {
     icon: "/assets/icons/alerts.svg",
-    heading: "Broadcasts &amp; Alerts",
+    heading: "Broadcasts & Alerts",
     subHeading:
       "Stay informed with real-time updates and alerts about ongoing emergencies in your area.",
   },
@@ -92,3 +93,16 @@ export const QnA = [
     question: "How do I stay updated on emergency broadcasts and alerts?",
   },
 ];
+
+export const customMarker = new L.Icon({
+  iconUrl: "/assets/icons/mapMarker.svg",
+  iconSize: [50, 50],
+  iconAnchor: [25, 50],
+  popupAnchor: [0, -15],
+});
+export const locationMarker = new L.Icon({
+  iconUrl: "/assets/icons/locationMarker.svg",
+  iconSize: [50, 50],
+  iconAnchor: [25, 50],
+  popupAnchor: [0, -15],
+});

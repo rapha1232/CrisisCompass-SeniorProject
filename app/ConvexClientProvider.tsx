@@ -26,9 +26,16 @@ export const ConvexClientProvider = ({
   return (
     <ClerkProvider
       appearance={{
-        elements: {
-          formButtonPrimary: "primary-gradient",
-          footerActionLink: "hover:text-primary-500",
+        layout: {
+          logoImageUrl: "/assets/icons/logo.svg",
+        },
+        variables: {
+          colorText: "#fff",
+          colorTextOnPrimaryBackground: "#fff",
+          colorTextSecondary: "#fff",
+          colorPrimary: "#AE38D6",
+          colorInputBackground: "#1E1E1E",
+          colorInputText: "#fff",
         },
         baseTheme: dark,
       }}

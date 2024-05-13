@@ -6,13 +6,9 @@ import { getCurrentUser } from "./users";
 export const get = query({
   args: {},
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Called (GET_CHATS) without authenticated user");
-    }
     const currentUser = await getCurrentUser(ctx, args);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
     }
     const chatMemberships = await ctx.db
       .query("chatMembers")

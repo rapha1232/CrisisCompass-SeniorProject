@@ -5,13 +5,9 @@ import { getCurrentUser } from "./users";
 export const get = query({
   args: { id: v.id("chats") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Called (GET_MESSAGES) without authenticated user");
-    }
     const currentUser = await getCurrentUser(ctx, args);
     if (!currentUser) {
-      throw new ConvexError("User not found");
+      return null;
     }
 
     const membership = await ctx.db

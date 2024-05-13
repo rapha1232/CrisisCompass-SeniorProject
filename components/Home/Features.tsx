@@ -1,6 +1,6 @@
 import { features } from "@/constants";
 import Image from "next/image";
-import FeatureCard from "./FeatureCard";
+import FeatureCard from "../cards/FeatureCard";
 
 export default function Features() {
   return (
@@ -26,7 +26,7 @@ export default function Features() {
                     alt={feature.heading}
                     width={20}
                     height={20}
-                    className="mr-6 size-8 shrink fill-white"
+                    className="invert-colors mr-6 size-8 shrink"
                   />
                 }
                 heading={feature.heading}

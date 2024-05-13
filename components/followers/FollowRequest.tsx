@@ -31,7 +31,9 @@ export const FollowRequest = ({ otherUser, id }: FollowRequestProps) => {
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col truncate">
-          <h4 className="truncate">{otherUser.fullname}</h4>
+          <h4 className="truncate">
+            {otherUser.username ?? otherUser.fullname}
+          </h4>
           <p className="truncate text-xs">{otherUser.email}</p>
         </div>
       </div>

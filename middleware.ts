@@ -1,17 +1,24 @@
-import { authMiddleware } from "@clerk/nextjs";
-import { NextResponse } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-export default authMiddleware({
-  publicRoutes: ["/"],
-  afterAuth(auth, req, evt) {
-    // Handle users who aren't authenticated
-    if (!auth.userId && !auth.isPublicRoute) {
-      const login = new URL("/login", req.url);
-      return NextResponse.redirect(login);
-    }
-  },
+const protectedRoute = createRouteMatcher([
+  "/alerts",
+  "/chats(.*)",
+  "/chats",
+  "/maps",
+  "/maps(.*)",
+]);
+
+export default clerkMiddleware((auth, req) => {
+  if (protectedRoute(req)) auth().protect();
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: [
+    "/((?!.+\\.[\\w]+$|_next).*)",
+    "/",
+    "/(api|trpc)(.*)",
+    "/chats(.*)",
+    "/api-get-token",
+    "/api/register-push",
+  ],
 };

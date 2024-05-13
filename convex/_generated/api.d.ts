@@ -17,6 +17,7 @@ import type {
 import type * as broadcasts from "../broadcasts.js";
 import type * as chat from "../chat.js";
 import type * as chats from "../chats.js";
+import type * as crons from "../crons.js";
 import type * as follower from "../follower.js";
 import type * as followers from "../followers.js";
 import type * as message from "../message.js";
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   broadcasts: typeof broadcasts;
   chat: typeof chat;
   chats: typeof chats;
+  crons: typeof crons;
   follower: typeof follower;
   followers: typeof followers;
   message: typeof message;

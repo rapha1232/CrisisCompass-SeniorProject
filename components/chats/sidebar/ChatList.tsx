@@ -31,7 +31,9 @@ export const ChatList = () => {
             key={chat.chat._id}
             id={chat.chat._id}
             imageUrl={chat.otherMember?.imageURL || ""}
-            name={chat.otherMember?.fullname || ""}
+            name={
+              (chat.otherMember?.username ?? chat.otherMember?.fullname) || ""
+            }
             additionalClasses={
               pathname.includes(chat.chat._id)
                 ? "bg-accent-purple hover:bg-transparent"

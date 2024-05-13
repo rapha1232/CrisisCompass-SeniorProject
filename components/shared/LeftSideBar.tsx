@@ -4,7 +4,7 @@ import { sidebarLinks } from "@/constants";
 import { api } from "@/convex/_generated/api";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
-import { PlusCircle } from "lucide-react";
+import { AlertCircle, PlusCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,6 +12,7 @@ import { Badge } from "../ui/badge";
 const LeftSideBar = () => {
   const pathname = usePathname();
   const newFollowRequests = useQuery(api.requests.count);
+  const newEmergencies = useQuery(api.broadcasts.getUserNewEmergencies);
   return (
     <section className="background-light900_dark200 custom-scrollbar light-border sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
       <div className="flex flex-1 flex-col gap-6">
@@ -30,12 +31,27 @@ const LeftSideBar = () => {
               }
             relative flex items-center justify-start gap-4 bg-transparent p-4`}
             >
-              {newFollowRequests !== 0 &&
-                newFollowRequests !== null &&
+              {newFollowRequests !== null &&
+                newFollowRequests !== undefined &&
+                newFollowRequests !== 0 &&
                 link.label === "Chats" && (
                   <Badge className="absolute right-0 top-0 bg-primary-500 text-light-900">
                     {newFollowRequests}
                   </Badge>
+                )}
+              {newEmergencies !== null &&
+                newEmergencies !== undefined &&
+                newEmergencies.length !== 0 &&
+                link.label === "Alerts" && (
+                  <>
+                    <Badge className="absolute right-0 top-0 flex items-center gap-2 bg-transparent text-red-600 hover:bg-transparent  max-lg:hidden">
+                      <AlertCircle className="" />
+                      {newEmergencies.length}
+                    </Badge>
+                    <Badge className="absolute right-0 top-0 flex items-center gap-2 bg-transparent text-red-600 hover:bg-transparent lg:hidden">
+                      {newEmergencies.length}
+                    </Badge>
+                  </>
                 )}
               <Image
                 src={link.imgURL}

@@ -91,7 +91,7 @@ const CreateGroupDialog = (props: Props) => {
     <Dialog>
       <Tooltip>
         <TooltipTrigger className="border-none outline-none">
-          <Button size={"icon"}>
+          <Button size={"icon"} className="ml-2">
             <DialogTrigger asChild className="border-none outline-none">
               <CirclePlus className="text-dark100_light900" />
             </DialogTrigger>
@@ -163,11 +163,12 @@ const CreateGroupDialog = (props: Props) => {
                                     <Avatar className="size-8">
                                       <AvatarImage src={follower.imageURL} />
                                       <AvatarFallback>
-                                        {follower.fullname.substring(0, 1)}
+                                        {follower.username ??
+                                          follower.fullname.substring(0, 1)}
                                       </AvatarFallback>
                                     </Avatar>
                                     <h4 className="truncate">
-                                      {follower.fullname}
+                                      {follower.username ?? follower.fullname}
                                     </h4>
                                   </DropdownMenuCheckboxItem>
                                 ))}
