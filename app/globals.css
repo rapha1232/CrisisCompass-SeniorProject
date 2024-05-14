@@ -60,6 +60,9 @@ body {
   .background-light800_dark200 {
     @apply bg-light-800 dark:bg-dark-200 !important;
   }
+  .background-light500_dark500 {
+    @apply bg-light-500 dark:bg-dark-500 !important;
+  }
 
   .text-dark100_light900 {
     @apply text-dark-100 dark:text-light-900 !important;

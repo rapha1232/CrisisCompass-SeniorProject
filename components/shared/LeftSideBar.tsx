@@ -4,10 +4,11 @@ import { sidebarLinks } from "@/constants";
 import { api } from "@/convex/_generated/api";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
-import { AlertCircle, PlusCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import CreateOrganizationDialog from "../dialogs/CreateOrganizationDialog";
 import { Badge } from "../ui/badge";
 const LeftSideBar = () => {
   const pathname = usePathname();
@@ -100,14 +101,15 @@ const LeftSideBar = () => {
         </div>
       </SignedOut>
       <SignedIn>
-        <Link href="/create-organization">
+        {/* <Link href="/create-organization">
           <Button className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
             <PlusCircle className="invert-colors lg:hidden" />
             <span className="text-primary-500 max-lg:hidden">
               Create Organization
             </span>
           </Button>
-        </Link>
+        </Link> */}
+        <CreateOrganizationDialog />
       </SignedIn>
     </section>
   );

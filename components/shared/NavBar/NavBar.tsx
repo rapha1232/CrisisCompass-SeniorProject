@@ -1,4 +1,4 @@
-import { SignedIn, UserButton } from "@clerk/nextjs";
+import { OrganizationSwitcher, SignedIn, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import MobileNav from "./MobileNav";
@@ -28,6 +28,7 @@ const NavBar = () => {
               },
             }}
           />
+          <OrganizationSwitcher />
         </SignedIn>
         <MobileNav />
       </div>

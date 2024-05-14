@@ -1,6 +1,14 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
+export const fileTypes = v.union(
+  v.literal("image"),
+  v.literal("csv"),
+  v.literal("pdf")
+);
+
+export const roles = v.union(v.literal("admin"), v.literal("member"));
+
 export default defineSchema({
   users: defineTable({
     tokenIdentifier: v.string(),
@@ -9,6 +17,7 @@ export default defineSchema({
     username: v.optional(v.string()),
     phoneNumber: v.optional(v.string()),
     location: v.optional(v.array(v.number())),
+    preferredRadius: v.optional(v.number()),
     imageURL: v.optional(v.string()),
     approveNotification: v.optional(v.boolean()),
   })
@@ -68,8 +77,16 @@ export default defineSchema({
     .index("by_user2", ["user2"])
     .index("by_chatId", ["chatId"]),
 
+  followOrg: defineTable({
+    userId: v.id("users"),
+    orgId: v.id("organization"),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_orgId", ["orgId"])
+    .index("by_userId_orgId", ["userId", "orgId"]),
+
   broadcast: defineTable({
-    senderId: v.id("users"),
+    senderId: v.union(v.id("users"), v.id("organization")),
     title: v.string(),
     description: v.string(),
     location: v.array(v.number()),
@@ -87,15 +104,19 @@ export default defineSchema({
   })
     .index("by_sender", ["senderId"])
     .index("by_status", ["status"]),
+
   organization: defineTable({
     adminId: v.id("users"),
     name: v.string(),
     email: v.string(),
     phoneNumber: v.string(),
-    imageUrl: v.string(),
+    imageUrl: v.id("_storage"),
     description: v.string(),
     location: v.array(v.number()),
-  }).index("by_adminId", ["adminId"]),
+  })
+    .index("by_adminId", ["adminId"])
+    .index("by_name", ["name"]),
+
   organizationMembers: defineTable({
     memberId: v.id("users"),
     organizationId: v.id("organization"),
@@ -103,4 +124,15 @@ export default defineSchema({
     .index("by_memberId", ["memberId"])
     .index("by_organizationId", ["organizationId"])
     .index("by_memberId_organizationId", ["memberId", "organizationId"]),
+
+  files: defineTable({
+    name: v.string(),
+    type: fileTypes,
+    orgId: v.string(),
+    fileId: v.id("_storage"),
+    userId: v.id("users"),
+    shouldDelete: v.optional(v.boolean()),
+  })
+    .index("by_orgId", ["orgId"])
+    .index("by_shouldDelete", ["shouldDelete"]),
 });

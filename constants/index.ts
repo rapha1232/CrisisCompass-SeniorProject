@@ -22,6 +22,11 @@ export const sidebarLinks: SidebarLink[] = [
     route: "/alerts",
     label: "Alerts",
   },
+  {
+    imgURL: "/assets/icons/organization.svg",
+    route: "/orgs",
+    label: "Orgs",
+  },
 ];
 
 export const themes = [

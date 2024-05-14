@@ -106,3 +106,57 @@ export const remove = mutation({
     );
   },
 });
+
+export const createForOrg = mutation({
+  args: {
+    orgId: v.id("organization"),
+  },
+  handler: async (ctx, args) => {
+    const currentUser = await getCurrentUser(ctx, args);
+    if (!currentUser) {
+      return null;
+    }
+
+    const org = await ctx.db.get(args.orgId);
+    if (!org) {
+      return null;
+    }
+
+    const follow = await ctx.db.insert("followOrg", {
+      userId: currentUser._id,
+      orgId: org._id,
+    });
+    return follow;
+  },
+});
+
+export const deleteForOrg = mutation({
+  args: {
+    orgId: v.id("organization"),
+  },
+  handler: async (ctx, args) => {
+    const currentUser = await getCurrentUser(ctx, args);
+    if (!currentUser) {
+      return null;
+    }
+
+    const org = await ctx.db.get(args.orgId);
+    if (!org) {
+      return null;
+    }
+
+    const follow = await ctx.db
+      .query("followOrg")
+      .withIndex("by_userId_orgId", (q) =>
+        q.eq("userId", currentUser._id).eq("orgId", org._id)
+      )
+      .unique();
+
+    if (!follow) {
+      return null;
+    }
+
+    const unfollow = await ctx.db.delete(follow._id);
+    return unfollow;
+  },
+});

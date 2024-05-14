@@ -2,6 +2,7 @@
 import AlertCard from "@/components/cards/AlertCard";
 import CreateAlertDialog from "@/components/dialogs/CreateAlertDialog";
 import { api } from "@/convex/_generated/api";
+import { useOrganization } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 
 type Props = {};
@@ -9,6 +10,8 @@ type Props = {};
 const AlertPage = (props: Props) => {
   const broadcasts = useQuery(api.broadcasts.get);
   const currUser = useQuery(api.users.getCurrentUser);
+  const o = useOrganization().organization;
+  const org = useQuery(api.organizations.getOne, { orgName: o?.name });
   return (
     <div className="flex size-full flex-col items-center gap-4">
       <CreateAlertDialog />
@@ -17,7 +20,11 @@ const AlertPage = (props: Props) => {
           <AlertCard
             key={broadcast._id}
             broadcast={broadcast}
-            editable={currUser?._id === broadcast.senderId ?? false}
+            editable={
+              org?.adminId === broadcast.senderId ??
+              currUser?._id === broadcast.senderId ??
+              false
+            }
           />
         ))
       ) : (

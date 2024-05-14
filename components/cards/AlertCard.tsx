@@ -38,7 +38,11 @@ const AlertCard = ({ broadcast, editable = false }: AlertProps) => {
     });
   };
   return (
-    <div className="background-light900_dark300 relative flex w-11/12 flex-col items-start justify-between rounded-[10px] p-9 sm:px-11">
+    <div
+      className={cn(
+        "background-light900_dark300 relative flex w-11/12 flex-col items-start justify-between rounded-[10px] p-9 sm:px-11"
+      )}
+    >
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
         <div>
           {editable && (
@@ -52,8 +56,8 @@ const AlertCard = ({ broadcast, editable = false }: AlertProps) => {
               <Trash className="text-dark300_light900" />
             </Button>
           )}
-          <span className="text-dark400_light700 mt-2 line-clamp-1 flex text-xs ">
-            {getTimestamp(broadcast._creationTime)}
+          <span className="text-dark400_light700 mt-2 line-clamp-1 flex flex-col text-xs ">
+            <span>{getTimestamp(broadcast._creationTime)}</span>
           </span>
           <h3 className="sm:h3-semibold base-semibold text-dark200_light900 line-clamp-1 flex-1">
             {broadcast.title}

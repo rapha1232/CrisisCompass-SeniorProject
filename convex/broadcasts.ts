@@ -16,44 +16,6 @@ export const get = query({
   },
 });
 
-// const sendEmails = action({
-//   args: {
-//     currentUser: v.any(),
-//     description: v.string(),
-//     usersToSend: v.array(v.any()),
-//   },
-//   handler: async (ctx, args) => {
-//     await Promise.all(
-//       args.usersToSend.map(async (user) => {
-//         if (
-//           process.env.NEXT_PUBLIC_MAIL_SERVICE_KEY === undefined ||
-//           process.env.NEXT_PUBLIC_MAIL_TEMPLATE_KEY === undefined ||
-//           process.env.NEXT_PUBLIC_MAIL_PUBLIC_KEY === undefined
-//         )
-//           throw new ConvexError("Email service not configured");
-//         await emailjs
-//           .send(
-//             process.env.NEXT_PUBLIC_MAIL_SERVICE_KEY,
-//             process.env.NEXT_PUBLIC_MAIL_TEMPLATE_KEY,
-//             {
-//               from_name: args.currentUser.fullname,
-//               message: args.description,
-//               reply_to: args.currentUser.email,
-//               to_name: user.fullname,
-//               to_email: user.email,
-//             },
-//             process.env.NEXT_PUBLIC_MAIL_PUBLIC_KEY
-//           )
-//           .then(() => console.log("Email sent"))
-//           .catch((err) => {
-//             console.log(err);
-//             throw new ConvexError("Failed to send email");
-//           });
-//       })
-//     );
-//   },
-// });
-
 export const create = mutation({
   args: {
     location: v.array(v.number()),
@@ -69,6 +31,7 @@ export const create = mutation({
         v.literal("Other")
       )
     ),
+    orgAdminId: v.optional(v.id("users")),
   },
   handler: async (ctx, args) => {
     const currentUser = await getCurrentUser(ctx, args);
@@ -80,10 +43,11 @@ export const create = mutation({
       title: args.title,
       description: args.description,
       location: args.location,
-      senderId: currentUser._id,
+      senderId: args.orgAdminId ? args.orgAdminId : currentUser._id,
       status: "Active",
       skills: args.skills,
     });
+
     return broadcast;
   },
 });
@@ -162,8 +126,10 @@ export const getUserNewEmergencies = query({
     const userSkillNames = userSkills.map((skill) => skill.skill);
     const emergencies = await getOngoingEmergencies(ctx, args);
     const matchingEmergencies = emergencies
-      ? emergencies.filter((emergency) =>
-          emergency.skills.some((skill) => userSkillNames.includes(skill))
+      ? emergencies.filter(
+          (emergency) =>
+            emergency.skills.some((skill) => userSkillNames.includes(skill)) &&
+            emergency.senderId !== currentUser._id
         )
       : null;
 
@@ -185,5 +151,55 @@ export const clearResolvedEmergencies = internalMutation({
         await ctx.db.delete(emergency._id);
       })
     );
+  },
+});
+
+export const createByOrg = mutation({
+  args: {
+    location: v.array(v.number()),
+    title: v.string(),
+    description: v.string(),
+    skills: v.array(
+      v.union(
+        v.literal("Medical"),
+        v.literal("Food and Water"),
+        v.literal("Shelter"),
+        v.literal("Transportation"),
+        v.literal("Clothing"),
+        v.literal("Other")
+      )
+    ),
+    orgId: v.optional(v.id("organization")),
+    orgAdminId: v.optional(v.id("users")),
+  },
+  handler: async (ctx, args) => {
+    const currentUser = await getCurrentUser(ctx, args);
+    if (!currentUser) {
+      return null;
+    }
+
+    if (args.orgId) {
+      const broadcast = await ctx.db.insert("broadcast", {
+        title: args.title,
+        description: args.description,
+        location: args.location,
+        senderId: args.orgId ? args.orgId : currentUser._id,
+        status: "Active",
+        skills: args.skills,
+      });
+
+      return broadcast;
+    }
+
+    const broadcast = await ctx.db.insert("broadcast", {
+      title: args.title,
+      description: args.description,
+      location: args.location,
+      senderId: args.orgAdminId ? args.orgAdminId : currentUser._id,
+      status: "Active",
+      skills: args.skills,
+    });
+
+    return broadcast;
   },
 });

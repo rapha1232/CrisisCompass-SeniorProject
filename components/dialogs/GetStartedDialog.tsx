@@ -2,6 +2,7 @@ import { skills } from "@/constants";
 import { api } from "@/convex/_generated/api";
 import { useMutationState } from "@/hooks/useMutationState";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckedState } from "@radix-ui/react-checkbox";
 import { useQuery } from "convex/react";
 import { ConvexError } from "convex/values";
 import { X } from "lucide-react";
@@ -35,6 +36,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { Input } from "../ui/input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const GetStartedSchema = z.object({
@@ -46,6 +48,7 @@ const GetStartedSchema = z.object({
     message:
       "You must approve to your location to connect you with crises in your area.",
   }),
+  preferredRadius: z.number().optional(),
   approveNotifications: z.boolean({
     message:
       "You must approve notifications to get notified when someone needs help in your area.",
@@ -64,6 +67,7 @@ const GetStartedDialog = () => {
     defaultValues: {
       skills: [],
       location: [],
+      preferredRadius: 50,
       approveNotifications: false,
     },
   });
@@ -79,6 +83,7 @@ const GetStartedDialog = () => {
     await updateUser({
       skills: values.skills,
       location: values.location,
+      preferredRadius: values.preferredRadius,
       approveNotification: values.approveNotifications,
       userId: currUser!._id,
     })
@@ -93,6 +98,19 @@ const GetStartedDialog = () => {
       );
   };
 
+  const onCheckLocation = (checked: CheckedState) => {
+    if (checked) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        form.setValue("location", [
+          position.coords.latitude,
+          position.coords.longitude,
+        ]);
+      });
+    } else {
+      form.setValue("location", []);
+    }
+  };
+
   return (
     <Dialog>
       <Tooltip>
@@ -100,7 +118,7 @@ const GetStartedDialog = () => {
           <Button>
             <DialogTrigger asChild className="border-none outline-none">
               <Button className="text-dark100_light900 hover:bg-transparent">
-                Get Started
+                {!currUser?.location ? "Get Started" : "Edit Profile"}
               </Button>
             </DialogTrigger>
             <TooltipContent className="background-light700_dark300 text-dark100_light900 border-none outline-none">
@@ -200,6 +218,31 @@ const GetStartedDialog = () => {
                     Make sure you verify your phone number in your profile, you
                     wont be able to set up your profile without it
                   </div>
+                  <FormField
+                    control={form.control}
+                    name="preferredRadius"
+                    render={({ field }) => {
+                      return (
+                        <FormItem>
+                          <FormLabel>
+                            Preferred Radius Of Alert (in Km)
+                          </FormLabel>
+                          <FormControl>
+                            <div className="both-center flex space-x-2">
+                              <Input
+                                id="preferredRadius"
+                                type="number"
+                                value={field.value}
+                                onChange={field.onChange}
+                                className="w-[90%] text-black outline-none"
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
                   <FormField
                     control={form.control}
                     name="skills"

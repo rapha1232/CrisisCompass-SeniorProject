@@ -85,6 +85,7 @@ export const updateUser = mutation({
   args: {
     userId: v.id("users"),
     location: v.array(v.number()),
+    preferredRadius: v.optional(v.number()),
     approveNotification: v.boolean(),
     skills: v.array(
       v.union(
@@ -97,7 +98,10 @@ export const updateUser = mutation({
       )
     ),
   },
-  handler: async (ctx, { userId, approveNotification, location, skills }) => {
+  handler: async (
+    ctx,
+    { userId, approveNotification, location, skills, preferredRadius }
+  ) => {
     const currentUser = await getCurrentUser(ctx, userId);
     if (!currentUser) {
       return null;
@@ -114,9 +118,70 @@ export const updateUser = mutation({
 
     await ctx.db.patch(userId, {
       location,
+      preferredRadius,
       approveNotification,
     });
   },
 });
 
-// export const getUsersWithNotif = in
+export const getUsersWithNotif = query({
+  args: {},
+  handler: async (ctx, args) => {
+    const currentUser = await getCurrentUser(ctx, args);
+    if (!currentUser) {
+      return null;
+    }
+    const users = await ctx.db
+      .query("users")
+      .withIndex("by_notification", (q) => q.eq("approveNotification", true))
+      .collect();
+    return users;
+  },
+});
+
+export const getUsersWithNotifAndSkills = query({
+  args: {},
+  handler: async (ctx, args) => {
+    const currentUser = await getCurrentUser(ctx, args);
+    if (!currentUser) {
+      return null;
+    }
+    const users = await ctx.db
+      .query("users")
+      .withIndex("by_notification", (q) => q.eq("approveNotification", true))
+      .collect();
+    const usersWithSkills = await Promise.all(
+      users.map(async (user) => {
+        const skills = await ctx.db
+          .query("skills")
+          .withIndex("by_userId", (q) => q.eq("userId", user._id))
+          .collect();
+        return { ...user, skills };
+      })
+    );
+    return usersWithSkills;
+  },
+});
+
+export const getOrgsFollowedByUser = query({
+  args: {},
+  handler: async (ctx, args) => {
+    const currentUser = await getCurrentUser(ctx, args);
+    if (!currentUser) {
+      return null;
+    }
+    const orgs = await ctx.db
+      .query("followOrg")
+      .withIndex("by_userId", (q) => q.eq("userId", currentUser._id))
+      .collect();
+
+    const orgsModified = await Promise.all(
+      orgs.map(async (org) => {
+        const orgData = await ctx.db.get(org.orgId);
+        return orgData;
+      })
+    );
+
+    return orgsModified;
+  },
+});
