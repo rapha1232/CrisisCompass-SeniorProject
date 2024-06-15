@@ -169,7 +169,7 @@ export const createByOrg = mutation({
         v.literal("Other")
       )
     ),
-    orgId: v.optional(v.id("organization")),
+    orgId: v.id("organization"),
     orgAdminId: v.optional(v.id("users")),
   },
   handler: async (ctx, args) => {
@@ -178,28 +178,36 @@ export const createByOrg = mutation({
       return null;
     }
 
-    if (args.orgId) {
-      const broadcast = await ctx.db.insert("broadcast", {
-        title: args.title,
-        description: args.description,
-        location: args.location,
-        senderId: args.orgId ? args.orgId : currentUser._id,
-        status: "Active",
-        skills: args.skills,
-      });
-
-      return broadcast;
-    }
-
     const broadcast = await ctx.db.insert("broadcast", {
       title: args.title,
       description: args.description,
       location: args.location,
-      senderId: args.orgAdminId ? args.orgAdminId : currentUser._id,
+      senderId: args.orgId,
       status: "Active",
       skills: args.skills,
     });
 
     return broadcast;
+  },
+});
+
+export const getOrgBroadcasts = query({
+  args: {
+    orgId: v.id("organization"),
+  },
+  handler: async (ctx, args) => {
+    const currentUser = await getCurrentUser(ctx, args);
+    if (!currentUser) {
+      return null;
+    }
+
+    const broadcasts = await ctx.db
+      .query("broadcast")
+      .withIndex("by_sender")
+      .filter((q) => q.eq(q.field("senderId"), args.orgId))
+      .order("desc")
+      .collect();
+
+    return broadcasts;
   },
 });

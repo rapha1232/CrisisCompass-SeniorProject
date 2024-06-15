@@ -156,7 +156,7 @@ const CreateOrganizationDialog = () => {
       }}
     >
       <DialogTrigger asChild>
-        <Button className=" text-dark100_light900">
+        <Button className="text-dark100_light900 w-[140px] text-sm">
           Create an Organization
         </Button>
       </DialogTrigger>

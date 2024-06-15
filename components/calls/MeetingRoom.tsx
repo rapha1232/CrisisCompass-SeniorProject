@@ -33,11 +33,11 @@ const MeetingRoom = () => {
   const [showParticipants, setShowParticipants] = useState(false);
   const { useCallCallingState } = useCallStateHooks();
 
-  // for more detail about types of CallingState see: https://getstream.io/video/docs/react/ui-cookbook/ringing-call/#incoming-call-panel
   const callingState = useCallCallingState();
 
   if (callingState === CallingState.LEFT) {
     router.back();
+    router.refresh();
     return <></>;
   }
   if (callingState !== CallingState.JOINED) {
@@ -71,7 +71,12 @@ const MeetingRoom = () => {
       </div>
       {/* video layout and call controls */}
       <div className="fixed bottom-0 flex w-full items-center justify-center gap-5">
-        <CallControls onLeave={() => router.push("/chats")} />
+        <CallControls
+          onLeave={() => {
+            router.push("/chats");
+            router.refresh();
+          }}
+        />
         <DropdownMenu>
           <div className="flex items-center">
             <DropdownMenuTrigger className="cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b]  ">

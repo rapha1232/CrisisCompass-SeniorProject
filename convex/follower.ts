@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { getCurrentUser } from "./users";
 
 export const create = mutation({
@@ -158,5 +158,43 @@ export const deleteForOrg = mutation({
 
     const unfollow = await ctx.db.delete(follow._id);
     return unfollow;
+  },
+});
+
+export const countForOrg = query({
+  args: {
+    orgId: v.id("organization"),
+  },
+  handler: async (ctx, args) => {
+    const currentUser = await getCurrentUser(ctx, args);
+    if (!currentUser) {
+      return null;
+    }
+
+    const count = await ctx.db
+      .query("followOrg")
+      .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
+      .collect();
+    return count.length;
+  },
+});
+
+export const doesFollowOrg = query({
+  args: {
+    orgId: v.id("organization"),
+  },
+  handler: async (ctx, args) => {
+    const currentUser = await getCurrentUser(ctx, args);
+    if (!currentUser) {
+      return false;
+    }
+
+    const follow = await ctx.db
+      .query("followOrg")
+      .withIndex("by_userId_orgId", (q) =>
+        q.eq("userId", currentUser._id).eq("orgId", args.orgId)
+      )
+      .unique();
+    return !!follow;
   },
 });

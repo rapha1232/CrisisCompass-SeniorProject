@@ -67,7 +67,7 @@ export const Map = ({
       center={center || [33.893, 35.743]}
       zoom={zoom || 9}
       className={cn(
-        "w-full h-[50%]",
+        "w-full h-[50%] z-0",
         {
           "h-full": full,
         },

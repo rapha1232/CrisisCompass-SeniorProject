@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 interface AlertProps {
   broadcast: Doc<"broadcast">;
   editable?: boolean;
+  className?: string;
 }
 
 /**
@@ -20,7 +21,7 @@ interface AlertProps {
  * @returns {JSX.Element} - Rendered AlertCard component.
  */
 
-const AlertCard = ({ broadcast, editable = false }: AlertProps) => {
+const AlertCard = ({ broadcast, editable = false, className }: AlertProps) => {
   const { mutate: updateBroadcast, pending: updatePending } = useMutationState(
     api.broadcasts.updateBroadcast
   );
@@ -37,10 +38,12 @@ const AlertCard = ({ broadcast, editable = false }: AlertProps) => {
       id: broadcast._id,
     });
   };
+  console.log(editable);
   return (
     <div
       className={cn(
-        "background-light900_dark300 relative flex w-11/12 flex-col items-start justify-between rounded-[10px] p-9 sm:px-11"
+        "background-light900_dark300 relative flex w-11/12 flex-col items-start justify-between rounded-[10px] p-9 sm:px-11",
+        className
       )}
     >
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">

@@ -1,4 +1,4 @@
-import { OrganizationSwitcher, SignedIn, UserButton } from "@clerk/nextjs";
+import { SignedIn, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import MobileNav from "./MobileNav";
@@ -18,6 +18,14 @@ const NavBar = () => {
           Crisis <span className="text-primary-500">Compass</span>
         </p>
       </Link>
+      <Link
+        href="/info"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-dark100_light900 cursor-pointer font-semibold !transition-colors !duration-300 !ease-in-out hover:!text-primary-500 hover:underline"
+      >
+        Info
+      </Link>
       <div className="flex-between gap-5">
         <Theme />
         <SignedIn>
@@ -28,7 +36,6 @@ const NavBar = () => {
               },
             }}
           />
-          <OrganizationSwitcher />
         </SignedIn>
         <MobileNav />
       </div>

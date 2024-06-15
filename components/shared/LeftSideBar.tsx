@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { sidebarLinks } from "@/constants";
 import { api } from "@/convex/_generated/api";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { OrganizationSwitcher, SignedIn, SignedOut } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { AlertCircle } from "lucide-react";
 import Image from "next/image";
@@ -15,7 +15,7 @@ const LeftSideBar = () => {
   const newFollowRequests = useQuery(api.requests.count);
   const newEmergencies = useQuery(api.broadcasts.getUserNewEmergencies);
   return (
-    <section className="background-light900_dark200 custom-scrollbar light-border sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
+    <section className="background-light900_dark200 custom-scrollbar light-border sticky left-0 top-0 z-10 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
       <div className="flex flex-1 flex-col gap-6">
         {sidebarLinks.map((link) => {
           const isActive =
@@ -109,7 +109,14 @@ const LeftSideBar = () => {
             </span>
           </Button>
         </Link> */}
-        <CreateOrganizationDialog />
+        <div className="m-0 flex flex-col gap-3 p-0">
+          <CreateOrganizationDialog />
+          <OrganizationSwitcher
+            appearance={{
+              elements: { button: { width: "150px" } },
+            }}
+          />
+        </div>
       </SignedIn>
     </section>
   );

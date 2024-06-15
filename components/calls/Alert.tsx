@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "../ui/button";
@@ -16,11 +15,6 @@ const Alert = ({ title, iconUrl }: PermissionCardProps) => {
         <CardContent>
           <div className="flex flex-col gap-9">
             <div className="flex flex-col gap-3.5">
-              {iconUrl && (
-                <div className="both-center flex">
-                  <Image src={iconUrl} width={72} height={72} alt="icon" />
-                </div>
-              )}
               <p className="text-center text-xl font-semibold">{title}</p>
             </div>
 

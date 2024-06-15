@@ -6,6 +6,7 @@ import { ConvexError } from "convex/values";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
+import DeleteOrgDialog from "../dialogs/DeleteOrgDialog";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -32,6 +33,10 @@ const OrgCard = ({ org, followed }: { org: Org; followed?: boolean }) => {
   const { mutate: unFollowOrg, pending: unFollowPending } = useMutationState(
     api.follower.deleteForOrg
   );
+
+  const orgFollowers = useQuery(api.follower.countForOrg, {
+    orgId: org._id,
+  });
   const handleFollowOrg = (orgId: Id<"organization">) => {
     if (!currUser) return;
     followOrg({
@@ -57,7 +62,7 @@ const OrgCard = ({ org, followed }: { org: Org; followed?: boolean }) => {
       <PopoverTrigger asChild className="cursor-pointer">
         <article
           key={org._id}
-          className="background-light800_dark200 light-border col-span-1 flex max-h-[300px] w-full max-w-[400px] flex-col items-center justify-center rounded-2xl border p-8"
+          className="background-light800_dark200 light-border relative col-span-1 flex max-h-[300px] w-full max-w-[400px] flex-col items-center justify-center rounded-2xl border p-8 max-md:mx-auto"
         >
           <OrgImage logo={org.logo} />
           <div className="mt-4 text-center">
@@ -68,6 +73,11 @@ const OrgCard = ({ org, followed }: { org: Org; followed?: boolean }) => {
               {org.email}
             </p>
           </div>
+          {orgFollowers && orgFollowers > 0 && (
+            <div className="absolute right-2 top-2 text-white">
+              Followers: {orgFollowers}
+            </div>
+          )}
           <div className="mt-4">
             {org.adminId !== currUser?._id ? (
               followed ? (
@@ -77,7 +87,7 @@ const OrgCard = ({ org, followed }: { org: Org; followed?: boolean }) => {
                     handleUnFollowOrg(org._id);
                   }}
                   disabled={unFollowPending}
-                  className="text-dark100_light900 w-full bg-primary-500"
+                  className="text-dark100_light900 w-full bg-red-500"
                 >
                   Unfollow Organization
                 </Button>
@@ -88,12 +98,14 @@ const OrgCard = ({ org, followed }: { org: Org; followed?: boolean }) => {
                     handleFollowOrg(org._id);
                   }}
                   disabled={followPending}
-                  className="text-dark100_light900 w-full bg-primary-500"
+                  className="text-dark100_light900 w-full bg-green-500"
                 >
                   Follow Organization
                 </Button>
               )
-            ) : null}
+            ) : (
+              <DeleteOrgDialog orgId={org._id} />
+            )}
           </div>
           :
         </article>
@@ -138,6 +150,17 @@ const OrgCard = ({ org, followed }: { org: Org; followed?: boolean }) => {
                 Press to navigate
               </Link>
             </div>
+            <Separator className="bg-light-500" />
+            <div className="grid grid-cols-3 items-center gap-4">
+              <Link
+                href={`/orgs/${org._id}`}
+                className="col-span-3 h-8 text-center text-blue-400 visited:text-purple-500 hover:text-blue-500 hover:underline"
+                target="_blank"
+                rel="noreferrer"
+              >
+                More Info
+              </Link>
+            </div>
           </div>
         </div>
       </PopoverContent>
@@ -145,7 +168,13 @@ const OrgCard = ({ org, followed }: { org: Org; followed?: boolean }) => {
   );
 };
 
-const OrgImage = ({ logo }: { logo: string | null }) => {
+export const OrgImage = ({
+  logo,
+  size = 100,
+}: {
+  logo: string | null;
+  size?: number;
+}) => {
   return (
     <>
       {logo && (
@@ -156,8 +185,8 @@ const OrgImage = ({ logo }: { logo: string | null }) => {
           }}
           src={logo}
           alt="test"
-          width={100}
-          height={100}
+          width={size}
+          height={size}
         />
       )}
     </>

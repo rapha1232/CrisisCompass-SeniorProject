@@ -14,10 +14,10 @@ const OngoingEmergencies = ({ descriptions }: Props) => {
   const { location } = useLocation();
   return (
     <div className="mt-7 flex w-full flex-col gap-4">
-      {ongoingEmergencies?.map((emergency) => {
+      {ongoingEmergencies?.slice(0, 5).map((emergency) => {
         return (
           <div key={emergency._id} className="flex items-center gap-4">
-            <div className="size-4 rounded-full bg-red-500" />
+            <div className="max-h-4 min-h-4 min-w-4 max-w-4 animate-pulse rounded-full bg-red-500" />
             {descriptions ? (
               <div className="flex flex-col">
                 <Link

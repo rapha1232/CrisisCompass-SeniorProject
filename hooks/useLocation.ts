@@ -10,6 +10,11 @@ const useLocation = () => {
       return;
     }
 
+    if (!navigator.permissions) {
+      console.error("Permissions API is not supported by your browser");
+      return;
+    }
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setLocation([position.coords.latitude, position.coords.longitude]);

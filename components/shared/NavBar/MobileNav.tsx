@@ -1,4 +1,5 @@
 "use client";
+import CreateOrganizationDialog from "@/components/dialogs/CreateOrganizationDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +10,12 @@ import {
 } from "@/components/ui/sheet";
 import { sidebarLinks } from "@/constants";
 import { api } from "@/convex/_generated/api";
-import { SignOutButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import {
+  OrganizationSwitcher,
+  SignOutButton,
+  SignedIn,
+  SignedOut,
+} from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { AlertCircle } from "lucide-react";
 import Image from "next/image";
@@ -122,6 +128,12 @@ const MobileNav = () => {
             </div>
           </SignedOut>
           <SignedIn>
+            <SignedIn>
+              <div className="m-0 mb-2 flex w-full flex-col gap-3 p-0">
+                <OrganizationSwitcher />
+                <CreateOrganizationDialog />
+              </div>
+            </SignedIn>
             <SheetClose asChild>
               <SignOutButton>
                 <Button className="small-medium btn-secondary min-h-[41px] w-full gap-3 rounded-lg px-4 py-3 shadow-none">

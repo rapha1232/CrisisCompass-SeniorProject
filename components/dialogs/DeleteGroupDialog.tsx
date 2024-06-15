@@ -12,6 +12,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutationState } from "@/hooks/useMutationState";
 import { ConvexError } from "convex/values";
+import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 
@@ -22,11 +23,13 @@ type Props = {
 };
 
 const DeleteGroupDialog = ({ chatId, open, setOpen }: Props) => {
+  const router = useRouter();
   const { mutate: deleteGroup, pending } = useMutationState(
     api.chat.deleteGroup
   );
 
   const handleDeleteGroup = async () => {
+    router.push("/chats");
     deleteGroup({ chatId })
       .then(() => {
         toast.success("Group deleted");

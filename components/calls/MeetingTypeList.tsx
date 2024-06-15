@@ -48,6 +48,8 @@ const MeetingTypeList = ({ chatId }: Props) => {
       const startsAt =
         values.dateTime.toISOString() || new Date(Date.now()).toISOString();
       const description = values.description || "Video Call";
+      call.microphone.stopOnLeave = true;
+      call.camera.stopOnLeave = true;
       await call.getOrCreate({
         data: {
           starts_at: startsAt,

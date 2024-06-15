@@ -11,6 +11,7 @@ import RemoveFollowerDialog from "@/components/dialogs/RemoveFollowerDialog";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface ChatProps {
@@ -20,6 +21,7 @@ interface ChatProps {
 }
 
 const ChatPage = ({ params: { chatId } }: ChatProps) => {
+  const router = useRouter();
   const chat = useQuery(api.chat.get, { id: chatId });
   const [removeFollowerDialogOpen, setRemoveFollowerDialogOpen] =
     useState(false);
@@ -30,7 +32,7 @@ const ChatPage = ({ params: { chatId } }: ChatProps) => {
   return chat === undefined ? (
     <Loading />
   ) : chat === null ? (
-    <div>Chat not found</div>
+    router.push("/chats")
   ) : (
     <ChatContainer>
       <RemoveFollowerDialog
@@ -56,6 +58,7 @@ const ChatPage = ({ params: { chatId } }: ChatProps) => {
             : chat.otherMember?.username ?? chat.otherMember?.fullname) || ""
         }
         imageUrl={chat.otherMember?.imageURL || ""}
+        isGroup={chat.isGroup}
         options={
           chat.isGroup
             ? [

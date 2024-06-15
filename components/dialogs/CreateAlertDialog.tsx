@@ -68,6 +68,9 @@ const CreateAlertDialog = () => {
   const usersWithNotif = useQuery(api.users.getUsersWithNotifAndSkills);
   const currUser = useQuery(api.users.getCurrentUser);
   const organization = useOrganization();
+  const o = useQuery(api.organizations.getOne, {
+    orgName: organization.organization?.name,
+  });
 
   const form = useForm<z.infer<typeof CreateAlertSchema>>({
     resolver: zodResolver(CreateAlertSchema),
@@ -119,14 +122,14 @@ const CreateAlertDialog = () => {
   };
 
   const handleSubmit = async (values: z.infer<typeof CreateAlertSchema>) => {
-    if (organization.organization) {
+    if (organization.organization && o) {
       console.log("org");
       await createAlertOrg({
         skills: values.skills,
         location: values.location,
         title: values.title,
         description: values.description,
-        orgId: organization.organization.publicMetadata._id,
+        orgId: o._id,
       })
         .then(() => {
           form.reset();
@@ -143,7 +146,7 @@ const CreateAlertDialog = () => {
             sendEmailNotification(usersToSendTo, message);
           }
 
-          toast.success("Alert successfully broadcasted!");
+          toast.success("Org Alert successfully broadcasted!");
         })
         .catch((err) =>
           toast.error(

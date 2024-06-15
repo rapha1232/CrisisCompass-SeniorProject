@@ -12,6 +12,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutationState } from "@/hooks/useMutationState";
 import { ConvexError } from "convex/values";
+import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 
@@ -22,9 +23,11 @@ type Props = {
 };
 
 const LeaveGroupDialog = ({ chatId, open, setOpen }: Props) => {
+  const router = useRouter();
   const { mutate: leaveGroup, pending } = useMutationState(api.chat.leaveGroup);
 
   const handleLeaveGroup = async () => {
+    router.push("/chats");
     leaveGroup({ chatId })
       .then(() => {
         toast.success("Group left");

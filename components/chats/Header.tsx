@@ -1,13 +1,14 @@
 import { cn } from "@/lib/utils";
 import { CircleArrowLeft, Settings } from "lucide-react";
 import Link from "next/link";
-import { MdGroups2 } from "react-icons/md";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 
 import { Id } from "@/convex/_generated/dataModel";
+import { MdGroups2 } from "react-icons/md";
 import MeetingTypeList from "../calls/MeetingTypeList";
+import ViewGroupMembers from "../dialogs/ViewGroupMembers";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,9 +25,10 @@ type Props = {
     onClick: () => void;
   }[];
   chatId: Id<"chats">;
+  isGroup: boolean;
 };
 
-const Header = ({ imageUrl, name, options, chatId }: Props) => {
+const Header = ({ imageUrl, name, options, chatId, isGroup }: Props) => {
   return (
     <Card className="text-dark100_light900 flex w-full items-center justify-between rounded-lg border-none p-2 outline-none">
       <div className="flex items-center gap-2">
@@ -41,7 +43,7 @@ const Header = ({ imageUrl, name, options, chatId }: Props) => {
         </Avatar>
         <h2 className="font-semibold">{name}</h2>
       </div>
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
         <MeetingTypeList chatId={chatId} />
         {options ? (
           <DropdownMenu>
@@ -67,6 +69,7 @@ const Header = ({ imageUrl, name, options, chatId }: Props) => {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : null}
+        {isGroup && <ViewGroupMembers chatId={chatId} />}
       </div>
     </Card>
   );

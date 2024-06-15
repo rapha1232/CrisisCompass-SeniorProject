@@ -2,12 +2,15 @@
 import OngoingEmergencies from "@/components/Global/OngoingEmergencies";
 import { Map } from "@/components/Maps/Map";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { customMarker } from "@/constants";
 import { api } from "@/convex/_generated/api";
 import useLocation from "@/hooks/useLocation";
@@ -19,11 +22,50 @@ import Link from "next/link";
 import { useState } from "react";
 import { Marker, Popup } from "react-leaflet";
 
+const SKILLS = [
+  "Medical",
+  "Food and Water",
+  "Shelter",
+  "Transportation",
+  "Clothing",
+  "Other",
+];
+
 const MapPage = () => {
-  const [distance, setDistance] = useState(200);
+  const currUser = useQuery(api.users.getCurrentUser);
+  const [distance, setDistance] = useState(50);
+  const [title, setTitle] = useState("");
+  const [skills, setSkills] = useState<
+    (
+      | "Medical"
+      | "Food and Water"
+      | "Shelter"
+      | "Transportation"
+      | "Clothing"
+      | "Other"
+    )[]
+  >([]);
   const ongoingEmergencies = useQuery(api.broadcasts.getOngoingEmergencies);
   const [isOpen, setIsOpen] = useState(true);
   const { location } = useLocation();
+  const modifiedBroadcasts = ongoingEmergencies?.filter((broadcast) => {
+    let dist = 0;
+    if (location && broadcast.location) {
+      dist = Math.ceil(
+        haversine(
+          { latitude: broadcast.location[0], longitude: broadcast.location[1] },
+          { latitude: location[0], longitude: location[1] }
+        ) / 1000
+      );
+    }
+    const includesTitle = broadcast.title
+      .toLowerCase()
+      .includes(title.toLowerCase());
+    const includesSkills =
+      skills.length === 0 ||
+      skills.every((skill) => broadcast.skills.includes(skill));
+    return includesTitle && dist <= distance && includesSkills;
+  });
   return (
     <section className="flex size-full flex-col items-center">
       <span className="m-0 mx-2 flex flex-col items-center gap-3 p-0">
@@ -33,14 +75,76 @@ const MapPage = () => {
           as well as all other active emergencies.
         </h4>
       </span>
-      <p className="text-dark100_light900">Filter by distance to emergency:</p>
-      <Input
-        className="w-[90%] outline-none"
-        placeholder="Distance (in km)..."
-        value={distance}
-        onChange={(e) => setDistance(Number(e.target.value))}
-        type="number"
-      />
+      <div className="mt-12 flex w-full gap-3 max-lg:flex-col">
+        <Input
+          placeholder="Search by title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="text-dark100_light900 background-light700_dark300 no-focus mx-auto w-3/4 border-none outline-none "
+        />
+      </div>
+      <div className="mx-auto mt-4 grid grid-cols-6 max-md:grid-cols-3">
+        {SKILLS.map((skill) => (
+          <div key={skill} className="col-span-1 m-2 flex items-center gap-1">
+            <Checkbox
+              className="text-dark100_light900"
+              value={
+                skill as
+                  | "Medical"
+                  | "Food and Water"
+                  | "Shelter"
+                  | "Transportation"
+                  | "Clothing"
+                  | "Other"
+              }
+              checked={skills.includes(
+                skill as
+                  | "Medical"
+                  | "Food and Water"
+                  | "Shelter"
+                  | "Transportation"
+                  | "Clothing"
+                  | "Other"
+              )}
+              onCheckedChange={(isChecked) => {
+                if (isChecked) {
+                  setSkills((prevSkills) => [
+                    ...prevSkills,
+                    skill as
+                      | "Medical"
+                      | "Food and Water"
+                      | "Shelter"
+                      | "Transportation"
+                      | "Clothing"
+                      | "Other",
+                  ]);
+                } else {
+                  setSkills((prevSkills) =>
+                    prevSkills.filter((s) => s !== skill)
+                  );
+                }
+              }}
+            />
+            <Label className="text-dark100_light900">{skill}</Label>
+          </div>
+        ))}
+      </div>
+      <div className="m-0 mt-4 flex w-[90%] items-center gap-2 p-0 max-md:flex-col">
+        <p className="text-dark300_light900 w-[160px] text-xl">
+          Distance (km): {distance}
+        </p>
+        <Slider
+          min={10}
+          max={200}
+          step={1}
+          value={[distance]}
+          onValueChange={(value) => setDistance(value[0])}
+          defaultValue={
+            currUser?.preferredRadius ? [currUser.preferredRadius] : [50]
+          }
+          className="no-focus mx-auto max-h-[16px] w-3/4 rounded-full border-none bg-primary-500 outline-none"
+        />
+      </div>
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}
@@ -58,7 +162,7 @@ const MapPage = () => {
         </CollapsibleTrigger>
         <CollapsibleContent className="flex size-full justify-center">
           <Map zoom={8.5} className="mt-2 h-3/4 w-[90%]">
-            {ongoingEmergencies
+            {modifiedBroadcasts
               ?.filter((emergency) => {
                 if (!emergency.location || !location) return false;
 

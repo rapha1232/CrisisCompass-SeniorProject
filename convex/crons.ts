@@ -9,4 +9,10 @@ crons.interval(
   internal.broadcasts.clearResolvedEmergencies
 );
 
+crons.interval(
+  "delete empty groups",
+  { hours: 24 }, // every day
+  internal.chat.cronDeleteGroup
+);
+
 export default crons;

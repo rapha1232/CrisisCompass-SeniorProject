@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { getCurrentUser } from "./users";
 
 export const get = query({
@@ -12,7 +12,7 @@ export const get = query({
 
     const chat = await ctx.db.get(args.id);
     if (!chat) {
-      throw new ConvexError("Chat not found");
+      return null;
     }
 
     const membership = await ctx.db
@@ -138,8 +138,7 @@ export const leaveGroup = mutation({
     if (!membership) {
       throw new ConvexError("You are not a member of this chat");
     }
-
-    await ctx.db.delete(args.chatId);
+    await ctx.db.delete(membership._id);
   },
 });
 
@@ -169,5 +168,83 @@ export const markRead = mutation({
     await ctx.db.patch(membership._id, {
       lastSeenMessage: lastMessage ? lastMessage._id : undefined,
     });
+  },
+});
+
+export const getGroupMembers = query({
+  args: {
+    id: v.id("chats"),
+  },
+  handler: async (ctx, args) => {
+    const currentUser = await getCurrentUser(ctx, args);
+    if (!currentUser) {
+      return null;
+    }
+
+    const chat = await ctx.db.get(args.id);
+    if (!chat) {
+      throw new ConvexError("Chat not found");
+    }
+
+    if (!chat.isGroup) {
+      return null;
+    }
+
+    const memberships = await ctx.db
+      .query("chatMembers")
+      .withIndex("by_chatId", (q) => q.eq("chatId", args.id))
+      .collect();
+
+    if (!memberships) {
+      return null;
+    }
+
+    const members = await Promise.all(
+      memberships.map(async (membership) => {
+        const member = await ctx.db.get(membership.memberId);
+        if (!member) {
+          return;
+        }
+        return member;
+      })
+    );
+
+    return members;
+  },
+});
+
+export const cronDeleteGroup = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const chats = await ctx.db.query("chats").collect();
+    await Promise.all(
+      chats.map(async (chat) => {
+        const memberships = await ctx.db
+          .query("chatMembers")
+          .withIndex("by_chatId", (q) => q.eq("chatId", chat._id))
+          .collect();
+
+        if (!memberships || memberships.length <= 1) {
+          const messages = await ctx.db
+            .query("messages")
+            .withIndex("by_chatId", (q) => q.eq("chatId", chat._id))
+            .collect();
+
+          await ctx.db.delete(chat._id);
+
+          await Promise.all(
+            memberships.map(async (membership) => {
+              await ctx.db.delete(membership._id);
+            })
+          );
+
+          await Promise.all(
+            messages.map(async (message) => {
+              await ctx.db.delete(message._id);
+            })
+          );
+        }
+      })
+    );
   },
 });

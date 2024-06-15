@@ -1,5 +1,6 @@
 "use client";
 
+import Contact from "@/components/Home/Contact";
 import FAQ from "@/components/Home/FAQ";
 import Features from "@/components/Home/Features";
 import Footer from "@/components/Home/Footer";
@@ -31,6 +32,7 @@ export default function Home() {
         <Hero />
         <Features />
         <FAQ />
+        <Contact />
         <Footer />
       </div>
     </>

@@ -1,3 +1,4 @@
+"use client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,6 +13,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutationState } from "@/hooks/useMutationState";
 import { ConvexError } from "convex/values";
+import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 
@@ -22,11 +24,13 @@ type Props = {
 };
 
 const RemoveFollowerDialog = ({ chatId, open, setOpen }: Props) => {
+  const router = useRouter();
   const { mutate: removeFollower, pending } = useMutationState(
     api.follower.remove
   );
 
   const handleRemoveFollower = async () => {
+    router.push("/chats");
     removeFollower({ chatId })
       .then(() => {
         toast.success("Follower removed");
