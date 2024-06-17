@@ -1,6 +1,6 @@
 "use client";
 import OngoingEmergencies from "@/components/Global/OngoingEmergencies";
-import { Map } from "@/components/Maps/Map";
+import { ClientMap } from "@/components/dynamicExport";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -11,16 +11,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { customMarker } from "@/constants";
 import { api } from "@/convex/_generated/api";
 import useLocation from "@/hooks/useLocation";
 import { useQuery } from "convex/react";
 import haversine from "haversine-distance";
-import { LatLng } from "leaflet";
 import { ChevronsDown, ChevronsUp } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
-import { Marker, Popup } from "react-leaflet";
 
 const SKILLS = [
   "Medical",
@@ -65,6 +61,22 @@ const MapPage = () => {
       skills.length === 0 ||
       skills.every((skill) => broadcast.skills.includes(skill));
     return includesTitle && dist <= distance && includesSkills;
+  });
+  const filteredBroadcasts = modifiedBroadcasts?.filter((emergency) => {
+    if (!emergency.location || !location) return false;
+
+    const emergencyLocation = {
+      latitude: emergency.location[0],
+      longitude: emergency.location[1],
+    };
+    const userLocation = {
+      latitude: location[0],
+      longitude: location[1],
+    };
+
+    const dist = haversine(userLocation, emergencyLocation) / 1000; // dist in km
+
+    return dist <= distance;
   });
   return (
     <section className="flex size-full flex-col items-center">
@@ -161,56 +173,11 @@ const MapPage = () => {
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent className="flex size-full justify-center">
-          <Map zoom={8.5} className="mt-2 h-3/4 w-[90%]">
-            {modifiedBroadcasts
-              ?.filter((emergency) => {
-                if (!emergency.location || !location) return false;
-
-                const emergencyLocation = {
-                  latitude: emergency.location[0],
-                  longitude: emergency.location[1],
-                };
-                const userLocation = {
-                  latitude: location[0],
-                  longitude: location[1],
-                };
-
-                const dist = haversine(userLocation, emergencyLocation) / 1000; // dist in km
-
-                return dist <= distance;
-              })
-              .map((emergency) => (
-                <Marker
-                  key={emergency._id}
-                  position={emergency.location as unknown as LatLng}
-                  icon={customMarker}
-                >
-                  <Popup>
-                    <Link
-                      href={`/maps/${emergency._id}`}
-                      className="hover:underline"
-                    >
-                      {emergency.title}
-                    </Link>
-                    {location && (
-                      <p>
-                        Distance:{" "}
-                        {Math.ceil(
-                          haversine(
-                            { latitude: location[0], longitude: location[1] },
-                            {
-                              latitude: emergency.location[0],
-                              longitude: emergency.location[1],
-                            }
-                          ) / 1000
-                        )}{" "}
-                        km
-                      </p>
-                    )}
-                  </Popup>
-                </Marker>
-              ))}
-          </Map>
+          <ClientMap
+            zoom={8.5}
+            className="mt-2 h-3/4 w-[90%]"
+            markerData={filteredBroadcasts}
+          />
         </CollapsibleContent>
       </Collapsible>
       <div className="flex h-2/5 w-[90%] flex-col xl:hidden">

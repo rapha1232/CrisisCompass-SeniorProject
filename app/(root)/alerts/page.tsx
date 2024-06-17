@@ -1,6 +1,5 @@
 "use client";
 import AlertCard from "@/components/cards/AlertCard";
-import CreateAlertDialog from "@/components/dialogs/CreateAlertDialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +9,8 @@ import useLocation from "@/hooks/useLocation";
 import { useOrganization } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import haversine from "haversine-distance";
-import { useState } from "react";
+import dynamic from "next/dynamic";
+import { useMemo, useState } from "react";
 
 const SKILLS = [
   "Medical",
@@ -57,9 +57,16 @@ const AlertPage = () => {
       skills.every((skill) => broadcast.skills.includes(skill));
     return includesTitle && dist <= distance && includesSkills;
   });
+  const CreateAlertDialogNoSSR = useMemo(
+    () =>
+      dynamic(() => import("@/components/dialogs/CreateAlertDialog"), {
+        ssr: false,
+      }),
+    []
+  );
   return (
     <div className="flex size-full flex-col items-center gap-4">
-      <CreateAlertDialog />
+      <CreateAlertDialogNoSSR />
       <div className="flex w-full gap-3 max-lg:flex-col">
         <Input
           placeholder="Search by title"

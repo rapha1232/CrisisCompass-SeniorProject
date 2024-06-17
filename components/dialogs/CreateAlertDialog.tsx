@@ -8,13 +8,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "convex/react";
 import { ConvexError } from "convex/values";
 import haversine from "haversine-distance";
+// import { LatLng } from "leaflet";
 import { LatLng } from "leaflet";
 import { X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { MapWithClick } from "../Maps/MapWithClick";
+import { ClientMapWithClick } from "../dynamicExport";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import {
@@ -277,7 +278,7 @@ const CreateAlertDialog = () => {
                           )
                         </FormLabel>
                         <FormControl className="size-full">
-                          <MapWithClick
+                          <ClientMapWithClick
                             full
                             returnFnc={handleLocationFromMap}
                           />

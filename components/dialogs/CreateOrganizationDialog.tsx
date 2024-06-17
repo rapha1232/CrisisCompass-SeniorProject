@@ -13,7 +13,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { MapWithClick } from "../Maps/MapWithClick";
+import { ClientMapWithClick } from "../dynamicExport";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -242,7 +242,10 @@ const CreateOrganizationDialog = () => {
                       )
                     </FormLabel>
                     <FormControl className="size-full">
-                      <MapWithClick full returnFnc={handleLocationFromMap} />
+                      <ClientMapWithClick
+                        full
+                        returnFnc={handleLocationFromMap}
+                      />
                     </FormControl>
                     <FormDescription className="text-left">
                       Add the location of the emergency

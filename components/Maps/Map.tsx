@@ -1,18 +1,38 @@
 "use client";
-import { locationMarker } from "@/constants";
+import { customMarker, locationMarker } from "@/constants";
 import { Doc } from "@/convex/_generated/dataModel";
 import useLocation from "@/hooks/useLocation";
 import { cn } from "@/lib/utils";
-import { LatLng } from "leaflet";
+import haversine from "haversine-distance";
+import L, { LatLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { MutableRefObject, ReactNode, useRef } from "react";
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  useMapEvent,
-} from "react-leaflet";
+import Link from "next/link";
+import { ReactNode } from "react";
+
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+
+const MapMarker = ({
+  position,
+  icon,
+  children,
+}: {
+  position: LatLng | [number, number];
+  icon: L.Icon<{
+    iconUrl: string;
+    iconSize: [number, number];
+    iconAnchor: [number, number];
+    popupAnchor: [number, number];
+  }>;
+  children?: ReactNode;
+}) => (
+  <Marker position={position} icon={icon}>
+    {children}
+  </Marker>
+);
+
+const MapPopup = ({ children }: { children: ReactNode }) => (
+  <Popup>{children}</Popup>
+);
 
 interface MapProps {
   className?: string;
@@ -20,46 +40,17 @@ interface MapProps {
   center?: LatLng;
   zoom?: number;
   children?: ReactNode;
-  broadcast?: Doc<"broadcast">;
+  markerData?: Doc<"broadcast">[];
 }
 
-function SetViewOnClick({
-  animateRef,
-}: {
-  animateRef: MutableRefObject<boolean>;
-}) {
-  const map = useMapEvent("click", (e) => {
-    map.setView(e.latlng, map.getZoom(), {
-      animate: animateRef.current || false,
-    });
-  });
-
-  return null;
-}
-
-// const Route = ({ broadcast }: MapProps) => {
-//   const map = useMap();
-//   const currentUser = useQuery(api.users.getCurrentUser);
-//   map.addControl(
-//     L.Routing.control({
-//       waypoints: [
-//         currentUser!.location as unknown as LatLng,
-//         broadcast!.location as unknown as LatLng,
-//       ],
-//     })
-//   );
-//   return null;
-// };
-
-export const Map = ({
+const Map = ({
   className,
   full = false,
   center,
   zoom,
   children,
-  broadcast,
+  markerData,
 }: MapProps) => {
-  const animatedRef = useRef(true);
   const { location, accuracy } = useLocation();
   return (
     <MapContainer
@@ -79,13 +70,44 @@ export const Map = ({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {children}
-      <SetViewOnClick animateRef={animatedRef} />
       {location && (
-        <Marker icon={locationMarker} position={location}>
-          <Popup>You are here with accuracy: {accuracy}m</Popup>
-        </Marker>
+        <Map.Marker icon={locationMarker} position={location}>
+          <Map.Popup>You are here with accuracy: {accuracy}m</Map.Popup>
+        </Map.Marker>
       )}
-      {/* {broadcast && <Route broadcast={broadcast} />} */}
+      {markerData?.map((marker) => (
+        <Map.Marker
+          key={marker._id}
+          position={marker.location as unknown as LatLng}
+          icon={customMarker}
+        >
+          <Map.Popup>
+            <Link href={`/maps/${marker._id}`} className="hover:underline">
+              {marker.title}
+            </Link>
+            {location && (
+              <p>
+                Distance:{" "}
+                {Math.ceil(
+                  haversine(
+                    { latitude: location[0], longitude: location[1] },
+                    {
+                      latitude: marker.location[0],
+                      longitude: marker.location[1],
+                    }
+                  ) / 1000
+                )}{" "}
+                km
+              </p>
+            )}
+          </Map.Popup>
+        </Map.Marker>
+      ))}
     </MapContainer>
   );
 };
+
+Map.Marker = MapMarker;
+Map.Popup = MapPopup;
+
+export default Map;

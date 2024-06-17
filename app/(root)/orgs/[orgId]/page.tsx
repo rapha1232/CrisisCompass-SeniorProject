@@ -1,5 +1,5 @@
 "use client";
-import { Map } from "@/components/Maps/Map";
+import Map from "@/components/Maps/Map";
 import AlertCard from "@/components/cards/AlertCard";
 import { OrgImage } from "@/components/cards/OrgCard";
 import { Badge } from "@/components/ui/badge";

@@ -1,5 +1,5 @@
 "use client";
-import { Map } from "@/components/Maps/Map";
+import { ClientMap } from "@/components/dynamicExport";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -11,10 +11,10 @@ import { Id } from "@/convex/_generated/dataModel";
 import { WeatherRes } from "@/types";
 import { useQuery } from "convex/react";
 import { LatLng } from "leaflet";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Marker, Popup as MarkerPopup } from "react-leaflet";
+import { useEffect, useMemo, useState } from "react";
 
 interface AlertProps {
   params: {
@@ -28,7 +28,22 @@ const AlertPage = ({ params: { broadcastId } }: AlertProps) => {
   });
   const [weather, setWeather] = useState<WeatherRes | null>(null);
   const [error, setError] = useState(false);
-
+  const ClientMarker = useMemo(
+    () =>
+      dynamic(() => import("react-leaflet").then((mod) => mod.Marker), {
+        loading: () => <p>A marker is loading</p>,
+        ssr: false,
+      }),
+    []
+  );
+  const ClientPopup = useMemo(
+    () =>
+      dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
+        loading: () => <p>A popup is loading</p>,
+        ssr: false,
+      }),
+    []
+  );
   useEffect(() => {
     if (broadcast?.location) {
       fetch(
@@ -156,14 +171,13 @@ const AlertPage = ({ params: { broadcastId } }: AlertProps) => {
             </div>
           </ScrollArea>
         </Card>
-        <Map
+        <ClientMap
           zoom={10}
           center={broadcast?.location as unknown as LatLng}
           full
           className="min-h-[500px]"
-          broadcast={broadcast ?? undefined}
         >
-          <Marker
+          <ClientMarker
             icon={customMarker}
             position={
               broadcast
@@ -171,7 +185,7 @@ const AlertPage = ({ params: { broadcastId } }: AlertProps) => {
                 : [33.893, 35.743]
             }
           >
-            <MarkerPopup>
+            <ClientPopup>
               <div className="both-center m-4 flex flex-col gap-2">
                 <p className="!m-0">{broadcast?.title}</p>
                 {error ? (
@@ -193,9 +207,9 @@ const AlertPage = ({ params: { broadcastId } }: AlertProps) => {
                   </span>
                 ) : null}
               </div>
-            </MarkerPopup>
-          </Marker>
-        </Map>
+            </ClientPopup>
+          </ClientMarker>
+        </ClientMap>
       </div>
     </div>
   );

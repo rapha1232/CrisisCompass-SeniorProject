@@ -1,12 +1,12 @@
 "use client";
-
-import Contact from "@/components/Home/Contact";
-import FAQ from "@/components/Home/FAQ";
-import Features from "@/components/Home/Features";
-import Footer from "@/components/Home/Footer";
-import Hero from "@/components/Home/Hero";
+import {
+  ClientContact,
+  ClientFAQ,
+  ClientFeatures,
+  ClientFooter,
+  ClientHero,
+} from "@/components/dynamicExport";
 import { api } from "@/convex/_generated/api";
-import { registerServiceWorker } from "@/lib/serviceWorker";
 import { useMutation } from "convex/react";
 import { useEffect } from "react";
 
@@ -16,24 +16,19 @@ export default function Home() {
     userStore({});
   });
 
-  useEffect(() => {
-    async function setUpServiceWorker() {
-      try {
-        await registerServiceWorker();
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    setUpServiceWorker();
-  }, []);
   return (
     <>
       <div className="home-container">
-        <Hero />
-        <Features />
-        <FAQ />
-        <Contact />
-        <Footer />
+        {/* 
+        For unknown reasons, "window" was being called while rendering on 
+        the server side, so dynamic CSR was used until the cause for the 
+        error is discovered 
+        */}
+        <ClientHero />
+        <ClientFeatures />
+        <ClientFAQ />
+        <ClientContact />
+        <ClientFooter />
       </div>
     </>
   );

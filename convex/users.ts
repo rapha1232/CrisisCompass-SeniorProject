@@ -52,18 +52,6 @@ export const store = mutation({
   },
 });
 
-// export const get = query({
-//   args: { userId: v.id("users") },
-//   handler: async (ctx, { userId }) => {
-//     const identity = await ctx.auth.getUserIdentity();
-//     if (!identity) {
-//       throw new Error("Called currentUser without authenticated user");
-//     }
-
-//     return await ctx.db.get(userId);
-//   },
-// });
-
 export const getCurrentUser = query({
   args: {},
   handler: async (ctx) => {

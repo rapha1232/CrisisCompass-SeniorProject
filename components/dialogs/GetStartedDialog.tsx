@@ -1,3 +1,4 @@
+"use client";
 import { skills } from "@/constants";
 import { api } from "@/convex/_generated/api";
 import { useMutationState } from "@/hooks/useMutationState";

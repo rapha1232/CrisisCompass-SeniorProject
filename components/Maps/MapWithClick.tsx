@@ -15,6 +15,7 @@ function ClickMarker({ returnFnc }: { returnFnc: (data: LatLng) => void }) {
   });
   return position ? <Marker position={position} icon={customMarker} /> : null;
 }
+
 function SetViewOnClick({
   animateRef,
 }: {

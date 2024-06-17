@@ -1,7 +1,18 @@
 import { SignedIn } from "@clerk/nextjs";
-import GetStartedDialog from "../dialogs/GetStartedDialog";
+import dynamic from "next/dynamic";
+import { useMemo } from "react";
 
 export default function Hero() {
+  const GetStartedDialogNoSSR = useMemo(
+    () =>
+      dynamic(
+        () => import("../dialogs/GetStartedDialog").then((mod) => mod.default),
+        {
+          ssr: false,
+        }
+      ),
+    []
+  );
   return (
     <div className="home-hero">
       <div className="heroContainer home-hero1">
@@ -11,7 +22,7 @@ export default function Hero() {
           </h1>
           <div className="flex items-center ">
             <SignedIn>
-              <GetStartedDialog />
+              <GetStartedDialogNoSSR />
             </SignedIn>
           </div>
         </div>
